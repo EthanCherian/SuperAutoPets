@@ -123,7 +123,7 @@ class Shop:
                     self.foods[i] = new_foods[i]
 
         return self.foods
-    
+
     def buy_shop_item(self, index, pets: bool = True):
         if pets:
             self.pets.pop(index)
@@ -145,7 +145,7 @@ class Shop:
                 self.frozen_foods.append(index)
             else:
                 warning(f"{index} already frozen")
-    
+
     def unfreeze(self, index: int, pets: bool = True):
         if pets:
             if index in self.frozen_pets: 
@@ -295,7 +295,7 @@ class Shop:
         if len(self.pets) < 1:
             warning("Shop is empty")
             return
-        
+
         shop_idx = input("Which pet do you want to buy? Enter the index: ")
 
         try:
@@ -317,7 +317,7 @@ class Shop:
         except:
             warning("Invalid input")
             return
-        
+
         combine = False
         if self.team.pets[team_idx - 1] is not None:
             occupied = self.team.pets[team_idx - 1]
@@ -338,6 +338,7 @@ class Shop:
         self.gold -= 3
 
         show(f"You bought {pet} for 3 gold.")
+        # handle remaining "on buy" abilities (ie. those interacting with shop)
 
         if "stock" in trigger:              # cow
             stock = trigger["stock"]
@@ -348,10 +349,10 @@ class Shop:
             for i in range(self.NUM_FOOD_SLOTS):
                 self.foods.insert(i, food_stock)
                 self.foods[i].cost = 0
-        
+
         if "level up" in trigger:
             self.handle_level_up(trigger)
-    
+
     def sell_pet(self):
         team_idx = input("Which pet do you want to sell? Enter the index: ")
 
@@ -362,22 +363,23 @@ class Shop:
         except:
             warning("Invalid input")
             return
-        
+
         pet = self.team.pets[team_idx - 1]
-        
+
         if pet == None:
             warning(f"No pet at index {team_idx}")
             return
-        
+
         trigger = self.team.on_pet_sell(team_idx - 1)
         gold_returned = trigger["gold returned"]
         self.gold += gold_returned
 
         show(f"You sold your {pet} for {gold_returned} gold.")
+        # handle remaining "on sell abilities" (ie. those interacting with shop)
 
         if "effect" not in trigger:
             return
-        
+
         effect = trigger["effect"]
         target = trigger["target"]
 
@@ -387,7 +389,7 @@ class Shop:
                 for shop_pet in self.pets:
                     debug(f"  {shop_pet} receiving {attack_buff, health_buff}")
                     shop_pet.receive_buff(attack_buff, health_buff)
-        
+
         elif effect == "stock":
             if target == "food":            # pigeon
                 stock_name = trigger["food"]
@@ -396,7 +398,7 @@ class Shop:
 
                 for _ in range(amount):
                     self.foods.append(GET_FOOD(stock_name))
-    
+
     def rearrange_pet(self):
         team_idx_1 = input("Which pet do you want to move? Enter the index: ")
 
@@ -407,11 +409,11 @@ class Shop:
         except:
             warning("Invalid input")
             return
-        
+
         if self.team.pets[team_idx_1 - 1] is None:
             warning(f"No pet at index {team_idx_1}")
             return
-        
+
         team_idx_2 = input("Where should it go? Enter the index: ")
 
         try:
@@ -421,22 +423,26 @@ class Shop:
         except:
             warning("Invalid input")
             return
-        
+
         if team_idx_1 == team_idx_2:
             warning(f"Can't move pet to same index {team_idx_1}")
             return
-        
+
         pet1 = self.team.pets[team_idx_1 - 1]
-        
+
         if self.team.pets[team_idx_2 - 1] is None:
             warning(f"Moving {pet1} to slot {team_idx_2}")
             self.team.pets[team_idx_2 - 1] = pet1
             self.team.pets[team_idx_1 - 1] = None
             return
-        
+
         pet2 = self.team.pets[team_idx_2 - 1]
 
+        combine = False
         if pet1.name == pet2.name:
+            combine = input("Combine pets? (y/n) ").lower() == "y"
+
+        if combine:
             # combine pets
             warning(f"Combining {pet1} and {pet2}")
             trigger = self.team.combine_pets(team_idx_1 - 1, team_idx_2 - 1)
@@ -451,7 +457,7 @@ class Shop:
         if len(self.foods) < 1:
             warning("Shop is empty")
             return
-        
+
         shop_idx = input("Which food do you want to buy? Enter the index: ")
 
         try:
@@ -461,7 +467,7 @@ class Shop:
         except:
             warning("Invalid input")
             return
-        
+
         food = self.foods[shop_idx - 1]
 
         if self.gold < food.cost:
@@ -480,6 +486,7 @@ class Shop:
 
             for team_idx in team_idcs:
                 self.team.on_food_eat(team_idx, food)
+
         else:                   # targeted food
             team_idx = input(f"Which pet should eat {food} ? Enter the index: ")
 
@@ -490,15 +497,15 @@ class Shop:
             except:
                 warning("Invalid input")
                 return
-            
+
             if self.team.pets[team_idx - 1] is None:
                 warning(f"No pet at index {team_idx - 1}")
                 return
-            
+
             trigger = self.team.on_food_eat(team_idx - 1, food)
             if not trigger:
                 return
-            
+
             # handle level up if necessary
             self.handle_level_up(trigger)
 
@@ -512,7 +519,7 @@ class Shop:
         except:
             warning("Invalid input")
             return
-        
+
         if frz_idx - 1 in self.frozen_pets:
             self.frozen_pets.remove(frz_idx - 1)
             show(f"You unfroze {self.pets[frz_idx - 1]}")
@@ -530,7 +537,7 @@ class Shop:
         except:
             warning("Invalid input")
             return
-        
+
         if frz_idx - 1 in self.frozen_foods:
             self.frozen_foods.remove(frz_idx - 1)
             show(f"You unfroze {self.foods[frz_idx - 1]}")
@@ -539,13 +546,14 @@ class Shop:
             show(f"You froze {self.foods[frz_idx - 1]}")
 
     def handle_level_up(self, trigger):
+        # if pet levels up, add new pet to shop from next highest tier
         if trigger is None or "level up" not in trigger:
             return
-        
+
         show(f"A pet levelled up, generating new pet of higher tier!")
 
         higher_tier = self.HIGHEST_TIER_PET + 1
-        higher_tier = min(higher_tier, 6)
+        higher_tier = min(higher_tier, 6)           # cap at 6
         new_pet_name = get_random_pet_from_tiers([higher_tier], 1)[0]
         new_pet = GET_PET(new_pet_name)
 

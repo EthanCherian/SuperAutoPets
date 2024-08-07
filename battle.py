@@ -44,9 +44,9 @@ def battle(team1: Team, team2: Team):
         team2.print()
     else:
         success(" It's a draw! ")
-    
+
     debug("")
-    
+
     team1.reset()
     team2.reset()
 

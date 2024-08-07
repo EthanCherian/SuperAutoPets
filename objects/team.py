@@ -14,7 +14,7 @@ class Team:
     name: str = ""
     num_wins: int = 0
     num_lives: int = 5
-    
+
     pets: List[Animal] = []
     battle_pets: List[Animal] = []
 
@@ -41,7 +41,6 @@ class Team:
     def shop_display(self):
         ret = "FRONT --> "
         
-        # for i, pet in enumerate(self.pets):
         for i in range(5):
             if i < len(self.pets) and self.pets[i]:
                 pet = self.pets[i]
@@ -69,6 +68,8 @@ class Team:
         return sum(pet is not None for pet in pets)
 
     def get_random_indices(self, n: int, in_battle: bool = False, exclude: int = -1) -> List[int]:
+        # get n random indices, excluding arg value
+        # only choose indices that are not None in the appropriate pets list
         pets = self.battle_pets if in_battle else self.pets
         full_indices = [pets.index(pet) for pet in pets if pet is not None]
         indices = set()             # want distinct indices
@@ -145,6 +146,7 @@ class Team:
         self.battle_pets = []
 
     def battle_turn(self, opposing_team: Team):
+        # front-most pet of each team attack each other
         pet = self.battle_pets[0]
         opposing_pet = opposing_team.battle_pets[0]
         
@@ -164,7 +166,7 @@ class Team:
             opp_splash = opposing_team.on_hurt(1, 5, self, True)
         opp_hit = opposing_team.on_hurt(0, pet.battle_attack, self, True, pet)
 
-        # check knockout
+        # check knockout (direct attack or splash damage)
         if (self_splash or self_hit) and (not opp_hit):
             # debug(f"  {opposing_pet} KO'ed {pet}")
             opposing_team.on_knockout(pet, self)
@@ -198,7 +200,7 @@ class Team:
         if not friend_behind:
             return
 
-        trigger = friend_behind.on_friend_ahead_attack()
+        trigger = friend_behind.on_friend_ahead_attack()        # kangaroo, which handles itself
         if trigger is None:
             return
 
@@ -237,16 +239,20 @@ class Team:
                     self.on_hurt(index, damage, opposing_team)
 
     def on_battle_start(self, opposing_team: Team):
-        if len(self.battle_pets) != 0:
+        # prepare pets for battle + trigger "start of battle" abilities
+
+        if len(self.battle_pets) != 0:        # team already prepared
             return
         for pet in self.pets:
             if not pet:
                 continue
             pet.prepare_battle()
 
+        # create copy of pets to be used in battle
         self.battle_pets = copy.copy(self.pets)
         self.battle_pets = [pet for pet in self.battle_pets if pet]
 
+        # copy of battle pets for "start of battle" abilities
         starting_pets = copy.copy(self.battle_pets)
 
         for idx, pet in enumerate(starting_pets):
@@ -268,7 +274,7 @@ class Team:
 
                 count = trigger["count"]
                 damage = trigger["damage"]
-                if target == "random":                # mosquito, leopard
+                if target == "random":                  # mosquito, leopard
                     random_indices = opposing_team.get_random_indices(count, True)
                     
                     for index in random_indices:
@@ -276,12 +282,12 @@ class Team:
                         opposing_team.on_hurt(index, damage, opposing_team=self, in_battle=True)
                 
                 if target == "lowest":
-                    for _ in range(count):
+                    for _ in range(count):              # dolphin
                         lowest_health_index = min(range(len(opposing_team.battle_pets)), key=lambda i: opposing_team.battle_pets[i].battle_health)
                         debug(f"  {pet} damaging {opposing_team.battle_pets[lowest_health_index]} for {damage} damage")
                         opposing_team.on_hurt(lowest_health_index, damage, opposing_team=self, in_battle=True)
                 
-                if target == "last":
+                if target == "last":                    # crocodile
                     last_idx = len(opposing_team.battle_pets) - 1
 
                     for _ in range(count):
@@ -290,7 +296,7 @@ class Team:
                             last_idx -= 1
 
             elif effect == "copy":
-                if target == "health":                 # crab
+                if target == "health":                  # crab
                     highest_health_index = max(range(len(self.battle_pets)), key=lambda i: self.battle_pets[i].battle_health)
                     highest_health_pet = self.battle_pets[highest_health_index]
                     pet.battle_health = int(trigger["amount"] * highest_health_pet.battle_health)
@@ -306,7 +312,7 @@ class Team:
                     pet_ahead.battle_attack += int(trigger["amount"] * pet.battle_attack)
                     debug(f"  {pet} buffing {pet_ahead} for {trigger['amount']} * {pet.battle_attack} attack --> {pet_ahead.get_battle_stats()}")
                 
-                if target == "all":
+                if target == "all":             # armadillo
                     health_buff = trigger["amount"][1]
 
                     for other_pet in self.battle_pets:
@@ -339,10 +345,12 @@ class Team:
                     self.on_pet_faint(idx_ahead, opposing_team, in_battle=True)
 
     def on_pet_faint(self, index: int, opposing_team: Team, in_battle: bool = True):
+        # handle "on faint" abilities
+
         pets = self.battle_pets if in_battle else self.pets
         fainted_pet = pets[index]
         debug(f"  {fainted_pet} fainted")
-        trigger = fainted_pet.on_faint()
+        trigger = fainted_pet.on_faint()        # call Animal on_faint() to check for relevant faint perks
         if in_battle:
             pets.pop(index)
         else:
@@ -407,7 +415,7 @@ class Team:
             token = trigger["token"]          # pet to be summoned
             count = trigger["count"]
 
-            if target == "team":        # summoning friend
+            if target == "team":        # summoning friend (eg. sheep, rooster, whale, etc.)
                 for _ in range(count):
                     c = copy.copy(token)
                     c.prepare_battle()
@@ -459,7 +467,7 @@ class Team:
                     pets[idx].receive_perk(perk, temporary=in_battle)
 
         elif effect == "damage":
-            if target == "adjacent":
+            if target == "adjacent":        # badger
                 if index != 0 or not in_battle:     # damaging friends only
                     behind = index      # pets.pop() shifted animals forward
                     ahead = index - 1
@@ -482,51 +490,48 @@ class Team:
                         debug(f"  damaging {opposing_team.battle_pets[ahead]} for {trigger['damage']} damage")
                         opposing_team.on_hurt(ahead, trigger["damage"], self, in_battle)
 
-            elif target == "all":
-                # TODO: replace with call to team.on_hurt
+            elif target == "all":               # hedgehog
                 debug(f"  damaging all pets for {trigger['amount']} damage")
                 pets_range = list(range(len(pets)))
                 for i in pets_range:
-                    pet = pets[i]
-                    pet.on_hurt(trigger["amount"])
-                    if pet.battle_health <= 0:
-                        self.on_pet_faint(i, opposing_team, in_battle)
+                    fainted = self.on_hurt(i, trigger["amount"], opposing_team, in_battle)
+                    if fainted:
                         pets_range.pop()
-                
+
                 if in_battle:
                     opposing_pets_range = list(range(len(opposing_team.battle_pets)))
                     for i in opposing_pets_range:
-                        pet = opposing_team.battle_pets[i]
-                        pet.on_hurt(trigger["amount"])
-                        if pet.battle_health <= 0:
-                            opposing_team.on_pet_faint(opposing_team.battle_pets.index(pet), self, in_battle)
+                        fainted = opposing_team.on_hurt(i, trigger["amount"], self, in_battle)
+                        if fainted:
                             opposing_pets_range.pop()
 
-        if "honey" in trigger:
+        if "honey" in trigger:          # fainted pet had honey --> summon bee @ (1, 1)
             bee = Animal("bee")
             debug(f"  summoning {bee} @ {bee.get_battle_stats()}")
             self.add_pet(bee, index, in_battle)
 
-        if "mushroom" in trigger:
+        if "mushroom" in trigger:       # fainted pet had mushroom --> summon clone of pet @ (1, 1)
             clone = PETS.GET_PET(fainted_pet.name)
-            clone.set_level(fainted_pet.level())
+            clone.set_level(fainted_pet.level())        # clone has same level as original pet
             clone.set_stats(1, 1)
             clone.prepare_battle()
             debug(f"  summoning cloned {clone} @ {clone.get_battle_stats()}")
             self.add_pet(clone, index, in_battle)
 
     def on_friend_summon(self, friend: Animal, in_battle: bool = False):
+        # handle "friend summoned" abilities
+
         pets = self.battle_pets if in_battle else self.pets
         for pet in pets:
             if pet and pet is not friend:
-                trigger = pet.on_friend_summon(friend)        # dog and horse handle themselves
+                trigger = pet.on_friend_summon(friend)          # dog and horse handle themselves
                 if not trigger:
                     continue
 
                 effect = trigger["effect"]
                 target = trigger["target"]
 
-                if effect == "buff":
+                if effect == "buff":                            # turkey
                     if target == "friend":
                         attack_buff, health_buff = trigger["amount"]
 
@@ -534,16 +539,18 @@ class Team:
                         debug(f"  {pet} buffing {friend} for {attack_buff, health_buff} --> {friend.get_battle_stats()}")
 
     def on_hurt(self, index: int, damage: int, opposing_team: Team, in_battle: bool = True, attacker: Animal = None):
-        res = False
+        # handle "hurt" abilities
+
+        pet_fainted = False         # useful to know whether pet fainted as a result of incoming damage
         
         pets = self.battle_pets if in_battle else self.pets
         pet = pets[index]
         trigger = pet.on_hurt(damage, attacker)
         if pet.battle_health <= 0:
             self.on_pet_faint(index, opposing_team, in_battle)
-            res = True
+            pet_fainted = True
         if not trigger:
-            return res
+            return pet_fainted
         
         effect = trigger["effect"]
         target = trigger["target"]
@@ -563,7 +570,7 @@ class Team:
             elif target == "behind":        # camel
                 behind_idx = (index + 1) if pet.battle_health > 0 else index
                 if behind_idx >= len(pets):
-                    return res
+                    return pet_fainted
                 pet_behind = pets[behind_idx]
                 debug(f"  {pet} giving {attack_buff, health_buff} to {pet_behind}")
                 pet_behind.receive_buff(attack_buff, health_buff, temporary=in_battle)
@@ -571,11 +578,13 @@ class Team:
         elif effect == "perk":              # gorilla (handles itself)
             pass
 
-        return res
+        return pet_fainted
 
     def on_food_eat(self, index: int, food: Food):
+        # handle food eating mechanics and "self/friend eats food" abilities
+
         food_friend = self.pets[index]
-        base_food = GET_FOOD(food.name)
+        base_food = GET_FOOD(food.name)     # create copy of food to be safe
         food_effects = food.get_stats()
 
         # check for friendly food eaten effects
@@ -603,20 +612,20 @@ class Team:
                     food_effects = tuple(i + j for i, j in zip(food_effects, increase))
                     debug(f"  {pet} increasing effects of {food} by {amount*100}%, now giving {food_effects}")
 
-        if food.is_perk():
-            if food.name != "sleeping pill" and food.name != "chocolate":
+        if food.is_perk():          # give appropriate perk
+            if food.name != "sleeping pill" and food.name != "chocolate":           # these two work differently
                 food_friend.receive_perk(food.perk, temporary=food.temporary)
-        else:
+        else:                       # pass buff
             food_friend.receive_buff(*food_effects, temporary=food.temporary)
 
-        
+        res = {}
         if food.name == "chocolate":
             l = food_friend.level()
             food_friend.gain_exp(1)
 
-            if l < food_friend.level():
+            if l < food_friend.level():             # check if pet leveled up, inform shop if so
                 self.on_pet_level_up(index)
-                return {
+                res = {
                     "level up": True
                 }
 
@@ -625,9 +634,8 @@ class Team:
 
         trigger = food_friend.on_food_eaten()
 
-        
         if not trigger:
-            return
+            return res
 
         effect = trigger["effect"]
         target = trigger["target"]
@@ -640,8 +648,12 @@ class Team:
                 for idx in random_indices:
                     debug(f"  {food_friend} giving {amount} attack to {self.pets[idx]}")
                     self.pets[idx].receive_buff(amount, 0, False)
+        
+        return res
 
     def on_knockout(self, victim: Animal, opposing_team: Team):
+        # handle "on knockout" abilities
+
         pet = self.battle_pets[0]
 
         trigger = pet.on_knockout()
@@ -668,21 +680,23 @@ class Team:
                     damage *= 2
 
                 debug(f"  {pet} KO'ed {victim}, dealing {damage} damage to {opposing_team.battle_pets[0]}")
-                hit = opposing_team.on_hurt(0, damage, opposing_team=self, in_battle=True)
+                got_ko = opposing_team.on_hurt(0, damage, opposing_team=self, in_battle=True)
 
-                if hit and len(opposing_team.battle_pets) != 0:
+                if got_ko and len(opposing_team.battle_pets) != 0:         # check for chaining knockouts
                     self.on_knockout(opposing_team.battle_pets[0], opposing_team)
 
     def on_pet_buy(self, friend: Animal, index: int, combine: bool = False):
+        # handle "on buy" abilities
+
         existing_pet = None
         ret = {}
         level = 100
-        if self.pets[index] is not None:
+        if self.pets[index] is not None:            # check if combining with existing pets
             existing_pet = self.pets[index]
             level = existing_pet.level()
 
-        success = self.add_pet(friend, index, in_battle=False, combine=combine)
-        if not success:
+        pet_added = self.add_pet(friend, index, in_battle=False, combine=combine)
+        if not pet_added:
             return { "failed": True }
 
         trigger = None
@@ -692,6 +706,7 @@ class Team:
             trigger = friend.on_buy()
 
         if existing_pet is not None and level < existing_pet.level():
+            # if leveled up, inform shop
             debug(f"  {existing_pet} levelled up!")
             self.on_pet_level_up(index)
             ret.update({ "level up": True })
@@ -717,8 +732,9 @@ class Team:
         return ret
 
     def on_pet_sell(self, index: int):
+        # handle "on sell" abilities
+
         pet = self.pets[index]
-        # self.pets.remove(pet)
         self.pets[index] = None
         trigger = pet.on_sell()
 
@@ -752,6 +768,8 @@ class Team:
         return trigger
 
     def on_friend_buy(self, friend: Animal):
+        # handle (single) "on friend buy" ability
+
         for i, pet in enumerate(self.pets):
             if pet is None:
                 continue
@@ -770,6 +788,8 @@ class Team:
                         self.pets[j].receive_buff(attack_buff, health_buff)
 
     def on_pet_level_up(self, index: int):
+        # handle (single) "on level up" ability
+
         pet = self.pets[index]
 
         trigger = pet.on_level_up()
@@ -797,10 +817,12 @@ class Team:
 
             if trigger:
                 ret.update(trigger)
-        
+
         return ret
 
     def on_end_turn(self):
+        # handle "on end turn" abilities
+
         pets = [p for p in self.pets if p is not None]
         for index, pet in enumerate(pets):
             if not pet:
@@ -820,9 +842,9 @@ class Team:
                     for friend in pets:
                         if friend != pet:
                             friend.receive_buff(0, health_buff)
-            
+
             elif target == "self":          # bison
-                # if team has level 3 pet on it
+                # if team has level 3 friend on it
                 has_l3_pet = any(
                     friend is not None and friend.level() == 3 and friend != pet
                     for friend in pets
@@ -830,7 +852,7 @@ class Team:
                 if has_l3_pet:
                     pet.receive_buff(attack_buff, health_buff)
                     debug(f"  {pet} gaining {attack_buff, health_buff} --> {pet.get_battle_stats()}")
-            
+
             elif target == "ahead":         # giraffe
                 count = trigger["count"]
                 indices_buff = [index - c for c in range(1, count + 1)]
@@ -839,14 +861,14 @@ class Team:
                 for i in indices_buff:
                     pets[i].receive_buff(attack_buff, health_buff)
                     debug(f"  {pet} giving {attack_buff, health_buff} to {pets[i]} --> {pets[i].get_battle_stats()}")
-            
+
             elif target == "front":         # monkey
                 pets[0].receive_buff(attack_buff, health_buff)
                 debug(f"  {pet} giving {attack_buff, health_buff} to {pets[0]} --> {pets[0].get_battle_stats()}")
 
             elif target == "high level":    # penguin
                 indices_buff = [
-                    i for i in range(len(pets) - 1, -1, -1)
+                    i for i in range(len(pets) - 1, -1, -1)         # from last to first
                     if pets[i].level() >= 2
                 ]
                 indices_buff = indices_buff[:trigger["count"]]

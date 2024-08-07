@@ -15,7 +15,7 @@ class Game:
         self.TEAM = Team(name)
         self.SHOP = Shop(self.TURN, self.TEAM)
         self.export = export
-    
+
     def play(self):
         team_id = -1
         while self.TEAM.num_wins < 10 and self.TEAM.num_lives > 0:
