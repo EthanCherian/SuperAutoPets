@@ -627,7 +627,7 @@ PET_EMOJIS = {
     "leopard": "🐆",
     "boar": "🐗",
     "tiger": "🐅",
-    "wolverine": "",
+    "wolverine": "🐺",      # on the right track lol
     "gorilla": "🦍",
     "dragon": "🐉",
     "mammoth": "🦖",        # sorta close ig

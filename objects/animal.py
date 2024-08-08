@@ -199,12 +199,10 @@ class Animal:
             other_perk = attacker.battle_perk
 
         if other_perk == 3:         # meat
-            dmg += 5
-            # print(f"{self} takes 5 more damage from enemy {PERK_EMOJIS[PERKS[other_perk]]} !")
+            dmg += 3
             print(f"{attacker} deals 5 more damage with {PERK_EMOJIS[PERKS[other_perk]]} !")
         elif other_perk == 9:       # steak
             dmg += 20
-            # print(f"{self} takes 20 more damage from enemy {PERK_EMOJIS[PERKS[other_perk]]}, which breaks!")
             print(f"{attacker} deals 20 more damage with {PERK_EMOJIS[PERKS[other_perk]]} , which breaks!")
             attacker.battle_perk = 0
 
@@ -220,7 +218,7 @@ class Animal:
         dmg = max(dmg, 0)
         
         if self.battle_perk == 11:         # coconut (absolute)
-            dmg = 0                 # CAREFUL ABT THIS
+            dmg = 0
             print(f"{self}'s {PERK_EMOJIS[PERKS[self.battle_perk]]} prevents damage and breaks!")
             self.battle_perk = 0
 
