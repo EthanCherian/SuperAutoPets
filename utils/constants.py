@@ -876,3 +876,15 @@ PERK_EMOJIS = {
     "peanut": "🥜",
     "coconut": "🥥"
 }
+
+GOLD_EMOJI = "💰"
+FREEZE_EMOJI = "🧊"
+ATTACK_EMOJI = "👊"
+HEALTH_EMOJI = "💖"
+
+USE_EMOJI = input("Use emojis? (y/n) ").lower() == "y"
+if not USE_EMOJI:
+    GOLD_EMOJI = "gold"
+    FREEZE_EMOJI = "frozen"
+    ATTACK_EMOJI = "attack"
+    HEALTH_EMOJI = "health"

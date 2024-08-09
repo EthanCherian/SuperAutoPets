@@ -2,6 +2,7 @@ import copy
 
 from utils.constants import FOODS, FOOD_NAMES, FOOD_EMOJIS
 from utils.constants import PERKS, PERK_EMOJIS
+from utils.constants import USE_EMOJI
 
 class Food:
     name: str = ""
@@ -38,7 +39,9 @@ class Food:
             self.shop = True
 
     def __str__(self):
-        return f"{FOOD_EMOJIS[self.name]}"
+        if USE_EMOJI:
+            return f"{FOOD_EMOJIS[self.name]}"
+        return f"{self.name}"
 
     def get_stats(self):
         return (self.att_buff, self.hp_buff)

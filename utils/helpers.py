@@ -5,6 +5,7 @@ from typing import List
 from objects.animal import Animal
 from utils.constants import PERKS, PERK_EMOJIS, FOODS
 from utils.constants import PETS
+from utils.constants import ATTACK_EMOJI, HEALTH_EMOJI
 
 flag = True
 
@@ -28,7 +29,7 @@ def show(text):
     if flag:
         print(f'\033[95m{text}\033[0m')
 
-def prompt(text):
+def blue(text):
     if flag:
         print(f'\033[94m {text} \033[0m')
 
@@ -38,7 +39,7 @@ def info(a: Animal, battle=False):
     perk = PERK_EMOJIS[PERKS[temp[3]]]
     attack = temp[4]
     health = temp[5]
-    print(f'\033[96m {a} || level: {level} || 👊: {attack:2g} || 💖: {health:2g} || perk: {perk} \033[00m')
+    print(f'\033[96m {a} || level: {level} || {ATTACK_EMOJI}: {attack:2g} || {HEALTH_EMOJI}: {health:2g} || perk: {perk} \033[00m')
 
 EXP_BAR = {
     0: "",

@@ -815,7 +815,7 @@ class Shark(Animal):
     def __init__(self):
         super().__init__("shark")
 
-    def on_friend_faint(self):          # TODO: create super function
+    def on_friend_faint(self):
         l = self.level() - 1
         return {
             "effect": "buff",

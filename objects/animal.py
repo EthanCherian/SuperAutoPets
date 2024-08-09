@@ -1,6 +1,7 @@
 from __future__ import annotations
 from utils.constants import PETS, PET_NAMES, PET_EMOJIS
 from utils.constants import PERK_EMOJIS, PERKS
+from utils.constants import USE_EMOJI
 
 # import number of cans used (from game?) and use to upgrade base stats
 
@@ -56,13 +57,14 @@ class Animal:
                 self.receive_buff(1, 1)
             
             if self.level() != curr_level:
-                self.on_level_up()          # TODO: won't trigger fish's ability
+                self.on_level_up()
 
             curr_level = self.level()
 
     def __str__(self):
-        # return f"{PET_EMOJIS[self.name]} | {PERK_EMOJIS[PERKS[self.perk]]}"
-        return f"{PET_EMOJIS[self.name]}"
+        if USE_EMOJI:
+            return f"{PET_EMOJIS[self.name]}"
+        return f"{self.name}"
 
     def clear_temp_buffs(self):
         self.battle_attack = self.attack

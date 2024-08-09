@@ -2,7 +2,8 @@ import math
 from typing import List
 
 from utils.helpers import get_random_pet_from_tiers, get_random_food_from_tiers
-from utils.helpers import debug, error, warning, success, prompt, show, shop_exp_display
+from utils.helpers import debug, error, warning, success, blue, show, shop_exp_display
+from utils.constants import GOLD_EMOJI, FREEZE_EMOJI
 from objects.pets import GET_PET
 from objects.food import GET_FOOD, Food
 from objects.animal import Animal
@@ -44,27 +45,26 @@ class Shop:
         ret = "\n-------------- SHOP --------------\n"
         ret += f"             Turn  {self.TURN}\n\n"
 
-        ret += "\nAnimals: (3 💰 each)\n\n"
+        ret += f"\nAnimals: (3 {GOLD_EMOJI} each)\n\n"
         for i, pet in enumerate(self.pets):
             pet_special = pet.tier > self.HIGHEST_TIER_PET
             pet_special = "✨" if pet_special else ""
             ret += f"[{i+1}] :: {pet_special} {pet} @ {pet.get_battle_stats()} {pet_special}"
             if i in self.frozen_pets:
-                ret += " [🧊]"
+                ret += f" [{FREEZE_EMOJI}]"
             
             if i < len(self.pets) - 1:
                 ret += " || "
 
-        ret += "\n\nFoods: (3 💰 each, unless otherwise stated)\n\n"
+        ret += f"\n\nFoods: (3 {GOLD_EMOJI} each, unless otherwise stated)\n\n"
 
         for i, food in enumerate(self.foods):
             ret += f"[{i+1}] :: {food}"
             if i in self.frozen_foods:
-                ret += " [🧊]"
+                ret += f" [{FREEZE_EMOJI}]"
             
-            # TODO: make sure this works and looks alright visually
             if food.cost != 3:
-                ret += f" (costs {food.cost} 💰!)"
+                ret += f" (costs {food.cost} {GOLD_EMOJI}!)"
             
             if i < len(self.foods) - 1:
                 ret += " || "
@@ -194,12 +194,12 @@ class Shop:
         
         if "gold" in trigger:            # swan
             gold_amt = trigger["gold"]
-            debug(f"  gaining {gold_amt} 💰")
+            debug(f"  gaining {gold_amt} {GOLD_EMOJI}")
             self.gold += gold_amt
 
         if "shop" in trigger:          # squirrel
             savings = trigger["shop"]
-            debug(f"  saving {savings} 💰 on food")
+            debug(f"  saving {savings} {GOLD_EMOJI} on food")
             for food in self.foods:
                 food.cost -= savings
                 food.cost = max(food.cost, 0)
@@ -208,13 +208,14 @@ class Shop:
             trigger_food = trigger["stock"]
             food_stock = GET_FOOD(trigger_food)
             food_stock.cost = 2
-            debug(f"  stocking {food_stock.cost} 💰 {food_stock}")
+            # debug(f"  stocking {food_stock.cost} {GOLD_EMOJI} {food_stock}")
+            debug(f"  stocking {food_stock} at {food_stock.cost} {GOLD_EMOJI}")
             self.foods.append(food_stock)
 
     def end_turn(self):
         # verify that user is okay wasting excess gold
         if self.gold > 0:
-            warning(f"You have {self.gold} 💰 left, it will be discarded if you end turn.")
+            warning(f"You have {self.gold} {GOLD_EMOJI} left, it will be discarded if you end turn.")
             gold_check = input("End turn anyway? (y/n) ").lower()
             if gold_check != "y" and gold_check != "yes":
                 return False
@@ -231,7 +232,7 @@ class Shop:
             print(self.team.shop_display())
 
             show("\nShop:")
-            show(f"You have {self.gold} gold 💰.")
+            show(f"You have {self.gold} {GOLD_EMOJI}.")
             print(self)
 
             show("Options:\n")
@@ -377,7 +378,7 @@ class Shop:
         gold_returned = trigger["gold returned"]
         self.gold += gold_returned
 
-        show(f"You sold your {pet} for {gold_returned} gold.")
+        show(f"You sold your {pet} for {gold_returned} {GOLD_EMOJI}.")
         # handle remaining "on sell abilities" (ie. those interacting with shop)
 
         if "effect" not in trigger:

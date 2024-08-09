@@ -28,9 +28,12 @@ class Game:
                 team_id = export_team(self.TEAM, self.TURN, team_id)
 
             # battle phase
+            # comment out the next three lines to skip battle phase
             temp_team = import_team("opponent", get_random_id(), self.TURN)
             winner = battle(self.TEAM, temp_team)
             self.handle_winner(winner)
+            # uncomment this line if skipping battle phase
+            # self.TEAM.reset()           # TODO: remove this when testing is over
 
             self.TURN += 1
 
