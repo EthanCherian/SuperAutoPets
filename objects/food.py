@@ -13,6 +13,7 @@ class Food:
     cost: int = -1
     temporary: bool = False
     count: int = -1
+    shop: bool = False
 
     def __init__(self, name):
         self.name = name
@@ -33,6 +34,9 @@ class Food:
         self.temporary = True if "temporary" in base_food else False
         self.count = 1 if "count" not in base_food else base_food["count"]
 
+        if "shop" in base_food:
+            self.shop = True
+
     def __str__(self):
         return f"{FOOD_EMOJIS[self.name]}"
 
@@ -42,6 +46,7 @@ class Food:
     def is_perk(self):
         return self.perk > 0
 
+# map from food name to food object
 FOOD_MAP = {
     "apple": Food("apple"),
     "honey": Food("honey"),
@@ -73,6 +78,7 @@ FOOD_MAP = {
     "best milk": Food("best milk"),
 }
 
+# map from perk name to corresponding food object
 PERK_MAP = {
     "honey": FOOD_MAP["honey"],
     "meat bone": FOOD_MAP["meat bone"],
@@ -83,6 +89,7 @@ PERK_MAP = {
     "steak": FOOD_MAP["steak"],
 }
 
+# functions to get clean copies of foods/perks from name
 def GET_FOOD(name: str) -> Food:
     return copy.copy(FOOD_MAP[name])
 

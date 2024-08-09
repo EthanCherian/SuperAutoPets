@@ -20,11 +20,11 @@ class Shop:
         "end turn": 8
     }
 
-    NUM_CANS_USED = 0
     TURN = -1
     HIGHEST_TIER_PET = 0
     NUM_ANIMAL_SLOTS = 0
     NUM_FOOD_SLOTS = 0
+    SHOP_BUFFS = 0
 
     pets: List[Animal] = []
     foods: List[Food] = []
@@ -101,6 +101,9 @@ class Shop:
     def set_animals(self):
         new_pets = get_random_pet_from_tiers(range(1, self.HIGHEST_TIER_PET + 1), self.NUM_ANIMAL_SLOTS)
         new_pets = [GET_PET(pet) for pet in new_pets]
+        for pet in new_pets:
+            # apply shop buffs from any previously purchased cans
+            pet.receive_buff(self.SHOP_BUFFS, self.SHOP_BUFFS)
 
         for i in range(len(new_pets)):
             if i not in self.frozen_pets:
@@ -479,7 +482,22 @@ class Shop:
         if shop_idx in self.frozen_foods:               # remove from frozen foods
             self.frozen_foods.remove(shop_idx)
 
-        if food.count > 1:      # distributed food
+        if food.shop:             # canned food purchased
+            # can is so different from other foods, need to handle separately
+            trigger = self.team.on_shop_food_buy(food)
+            show(f"{food} purchased")
+
+            pct_increase = trigger["increase"]
+            base_effects = food.get_stats()
+            boosted_effect = tuple(boost * (1 + pct_increase) for boost in base_effects)
+            # apply buff to current shop pets
+            for shop_pet in self.pets:
+                shop_pet.receive_buff(*boosted_effect)
+
+            # update shop buff to apply buff to all future shop pets
+            self.SHOP_BUFFS += boosted_effect[0]
+
+        elif food.count > 1:      # distributed food
             team_idcs = self.team.get_random_indices(food.count, False)
 
             show(f"{food} distributed to {[str(self.team.pets[i]) for i in team_idcs]}")

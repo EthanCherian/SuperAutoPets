@@ -8,8 +8,6 @@ from objects import pets as PETS
 from objects.food import Food, PERK_EMOJIS, PERKS, GET_FOOD
 from utils.helpers import debug, error, warning, success, info, shop_exp_display
 
-NUM_CANS_USED = 0
-
 class Team:
     name: str = ""
     num_wins: int = 0
@@ -650,6 +648,29 @@ class Team:
                     self.pets[idx].receive_buff(amount, 0, False)
         
         return res
+
+    def on_shop_food_buy(self, food: Food):
+        # just for purchases of canned food
+        food_inc = { "increase": 0 }
+        for pet in self.pets:
+            if not pet:
+                continue
+
+            trigger = pet.on_friend_eats_food()
+            if not trigger:
+                continue
+
+            effect = trigger["effect"]
+            target = trigger["target"]
+
+            if effect != "increase" or target != "ate":
+                continue
+
+            amount = trigger["amount"]
+            inc = food_inc["increase"]
+            food_inc.update({ "increase": inc + amount })
+        
+        return food_inc
 
     def on_knockout(self, victim: Animal, opposing_team: Team):
         # handle "on knockout" abilities

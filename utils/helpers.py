@@ -59,6 +59,7 @@ def shop_exp_display(a: Animal):
 # ----------------------------------------
 
 def get_random_id(exclude_id: int = None):
+    # get a random valid team id, excluding the one passed in
     file_names = [file for file in os.listdir('data') if file.startswith('team_') and file.endswith('.csv')]
     selected_file = None
     while True:
@@ -69,6 +70,7 @@ def get_random_id(exclude_id: int = None):
     return int(selected_file.split('_')[1].split('.')[0])
 
 def get_next_id():
+    # get the next sequential team id to which a new team may be saved
     file_names = [file for file in os.listdir('data') if file.startswith('team_') and file.endswith('.csv')]
     file_ids = [int(file.split('_')[1].split('.')[0]) for file in file_names]
 
@@ -77,6 +79,7 @@ def get_next_id():
     return max(file_ids) + 1
 
 def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
+    # get count random pets from tiers
     ret = []
     pets_in_tier = [pet for pet in PETS if pet["tier"] in tiers and "token" not in pet]
     pet_names = [pet["name"] for pet in pets_in_tier]
@@ -86,6 +89,7 @@ def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
     return ret
 
 def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
+    # get count random foods from tiers
     ret = []
     foods_in_tier = [food for food in FOODS if food["tier"] in tiers and "token" not in food]
     food_names = [food["name"] for food in foods_in_tier]
@@ -94,10 +98,12 @@ def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
     
     return ret
 
+# these two were used for testing pets/foods
+
 # def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
 #     ret = ["sheep", "sheep", "sheep"]
 #     return ret
 
 # def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
-#     ret = ["salad"]
+#     ret = ["canned food"]
 #     return ret

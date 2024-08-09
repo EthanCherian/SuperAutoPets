@@ -1008,7 +1008,7 @@ class Fly(Animal):
 
 # ----------------------------------------------------------
 
-
+# map from pet name to pet object
 CREATE_PET: Dict[str, Animal] = {
     "bee": Animal("bee"),
     "zombie cricket": Animal("zombie cricket"),
@@ -1086,4 +1086,5 @@ CREATE_PET: Dict[str, Animal] = {
 }
 
 def GET_PET(name: str) -> Animal:
+    # get a clean copy of the pet object matching name
     return copy.copy(CREATE_PET[name])

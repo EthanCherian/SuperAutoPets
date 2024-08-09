@@ -560,6 +560,7 @@ PETS = [
 # pet names
 PET_NAMES = [pet["name"] for pet in PETS]
 
+# pet emojis, used to display
 PET_EMOJIS = {
     "ant": "🐜",
     "beaver": "🐻",         # unfortunately, no beaver emoji :(
@@ -636,6 +637,7 @@ PET_EMOJIS = {
     "fly": "🦇"             # :(
 }
 
+# all food info
 FOODS = [
     # TIER 1 FOODS
     {
@@ -696,8 +698,9 @@ FOODS = [
     {
         "name": "canned food",
         "tier": 4,
-        "att_buff": 0,
-        "hp_buff": 0,
+        "att_buff": 1,
+        "hp_buff": 1,
+        "shop": True
     },
     {
         "name": "pear",
@@ -810,8 +813,10 @@ FOODS = [
     },
 ]
 
+# food names
 FOOD_NAMES = [food["name"] for food in FOODS]
 
+# food emojis, used to display
 FOOD_EMOJIS = {
     "apple": "🍎",
     "honey": "🍯",
@@ -843,6 +848,7 @@ FOOD_EMOJIS = {
     "best milk": "🥛✨✨"
 }
 
+# perk names
 PERKS = [
     "none",
     "honey",
@@ -855,6 +861,7 @@ PERKS = [
     "peanut", "coconut"
 ]
 
+# perk emojis, used to display
 PERK_EMOJIS = {
     "none": "⚪",
     "honey": "🍯",
