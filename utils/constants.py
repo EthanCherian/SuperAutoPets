@@ -881,6 +881,7 @@ GOLD_EMOJI = "💰"
 FREEZE_EMOJI = "🧊"
 ATTACK_EMOJI = "👊"
 HEALTH_EMOJI = "💖"
+SPECIAL_EMOJI = "✨"
 
 USE_EMOJI = input("Use emojis? (y/n) ").lower() == "y"
 if not USE_EMOJI:
@@ -888,3 +889,4 @@ if not USE_EMOJI:
     FREEZE_EMOJI = "frozen"
     ATTACK_EMOJI = "attack"
     HEALTH_EMOJI = "health"
+    SPECIAL_EMOJI = "SPECIAL"

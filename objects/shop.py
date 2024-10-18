@@ -3,7 +3,7 @@ from typing import List
 
 from utils.helpers import get_random_pet_from_tiers, get_random_food_from_tiers
 from utils.helpers import debug, error, warning, success, blue, show, shop_exp_display
-from utils.constants import GOLD_EMOJI, FREEZE_EMOJI
+from utils.constants import GOLD_EMOJI, FREEZE_EMOJI, SPECIAL_EMOJI
 from objects.pets import GET_PET
 from objects.food import GET_FOOD, Food
 from objects.animal import Animal
@@ -47,8 +47,7 @@ class Shop:
 
         ret += f"\nAnimals: (3 {GOLD_EMOJI} each)\n\n"
         for i, pet in enumerate(self.pets):
-            pet_special = pet.tier > self.HIGHEST_TIER_PET
-            pet_special = "✨" if pet_special else ""
+            pet_special = SPECIAL_EMOJI if pet.tier > self.HIGHEST_TIER_PET else ""
             ret += f"[{i+1}] :: {pet_special} {pet} @ {pet.get_battle_stats()} {pet_special}"
             if i in self.frozen_pets:
                 ret += f" [{FREEZE_EMOJI}]"
