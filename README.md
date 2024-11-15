@@ -6,14 +6,14 @@ The source of much of my knowledge used to make this is the folks over at the [S
 
 ## Execution
 
-**VERY IMPORTANT NOTE**: As of now, many things are displayed using emojis (as this was part of the original charm of SAP). To the best of my knowledge, only VS Code's terminal has the ability to display these emojis (don't ask me why lol). The app may prove unusable by any other means. I'm hard at work on a solution, should be out soon <sup>TM</sup>.
-
 To run the program, simply execute the following command in the root directory:
 
 ```bash
 python3 super_auto_pets.py
 ```
 
-Your "team name" may be anything you wish, and I would recommend agreeing to backup your teams. They'll be added to the `data` folder, so you may battle against them later. Otherwise, you'll simply be facing the handful of teams that I happened to create, which should also work perfectly fine.
+* *I believe* that only the inbuilt terminal in Visual Studio Code can display emojis, so you should decline those when prompted otherwise.
+* Your "team name" may be anything you wish.
+* I would recommend agreeing to backup your teams. They'll be added to the `data` folder, so you may battle against them later. Otherwise, you'll simply be facing the handful of teams that I happened to create, which should also work perfectly fine.
 
 Consult [my wiki](https://github.com/EthanCherian/SuperAutoPets/wiki) for any further questions!
