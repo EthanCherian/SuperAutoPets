@@ -139,7 +139,7 @@ class Team:
     def reset(self):
         for pet in self.pets:
             if pet:
-                pet.clear_temp_buffs()
+                pet.reset()
 
         self.battle_pets = []
 
@@ -855,6 +855,18 @@ class Team:
 
             effect = trigger["effect"]
             target = trigger["target"]
+
+            if effect == "copy":            # parrot
+                debug(f"  {pet} is a parrot?")
+                if index == 0:      # parrot is at front, no one to copy
+                    continue
+
+                copy_pet = pets[index - 1]
+                debug(f"  {pet} copying {copy_pet}")
+                pet.copy_pet = copy_pet
+                continue
+
+            # below effects are all "buff"
             attack_buff, health_buff = trigger['amount']
 
             if effect == "on loss":         # snail

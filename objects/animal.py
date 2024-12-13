@@ -66,7 +66,7 @@ class Animal:
             return f"{PET_EMOJIS[self.name]}"
         return f"{self.name}"
 
-    def clear_temp_buffs(self):
+    def reset(self):
         self.battle_attack = self.attack
         self.battle_health = self.health
         self.battle_perk = self.perk

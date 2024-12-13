@@ -681,10 +681,61 @@ class Whale(Animal):
         return ret
 
 class Parrot(Animal):
+    copy_pet: Animal = None
+    copy_lvl = [1, 2, 3]
+
     def __init__(self):
         super().__init__("parrot")
+    
+    def reset(self):
+        self.copy_pet = None
+        super().reset()
 
     def on_end_turn(self):
+        return {
+            "effect": "copy",
+            "target": "ahead",
+        }
+    
+    def on_battle_start(self):
+        # ensure copy_pet is properly set up to trigger it's abilities in battle
+
+        # get fresh copy of pet (not technically necessary i think)
+        self.copy_pet = GET_PET(self.copy_pet.name)
+
+        l = self.level() - 1
+        self.copy_pet.set_level(self.copy_lvl[l])
+
+        # trigger copy_pet's battle_start ability (if any)
+        return self.copy_pet.on_battle_start()
+    
+    # all triggers that parrot can activate are in battle, below
+
+    def on_friend_summon(self, friend: Animal):
+        pass
+
+    def on_faint(self):
+        pass
+
+    def on_knockout(self):
+        pass
+
+    def on_hurt(self, other_attack: int, attacker: Animal = None):
+        pass
+
+    def before_attack(self):
+        pass
+
+    def after_attack(self):
+        pass
+
+    def on_friend_ahead_attack(self):
+        pass
+
+    def on_friend_ahead_faints(self):
+        pass
+
+    def on_friend_faint(self):
         pass
 
 # TIER 5 ANIMALS
@@ -888,9 +939,9 @@ class Gorilla(Animal):
     def __init__(self):
         super().__init__("gorilla")
     
-    def clear_temp_buffs(self):
+    def reset(self):
         self.curr_cnt = 0
-        super().clear_temp_buffs()
+        super().reset()
 
     def on_hurt(self, other_attack: int, attacker: Animal = None):
         curr_health = self.battle_health

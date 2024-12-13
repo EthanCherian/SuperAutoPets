@@ -29,7 +29,11 @@ class Game:
 
             # battle phase
             # comment out the next three lines to skip battle phase
-            temp_team = import_team("opponent", get_random_id(), self.TURN)
+            try:
+                temp_team = import_team("opponent", get_random_id(), self.TURN)
+            except Exception as e:
+                print("No opposing team found, moving on...")
+                continue
             winner = battle(self.TEAM, temp_team)
             self.handle_winner(winner)
             # uncomment this line if skipping battle phase
