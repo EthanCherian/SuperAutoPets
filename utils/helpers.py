@@ -101,10 +101,10 @@ def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
 
 # these two were used for testing pets/foods
 
-def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
-    ret = ["parrot", "sheep", "rooster", "mosquito"]
-    return ret
-
-# def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
-#     ret = ["canned food"]
+# def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
+#     ret = ["parrot", "sheep", "rooster", "mosquito"]
 #     return ret
+
+# # def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
+# #     ret = ["canned food"]
+# #     return ret

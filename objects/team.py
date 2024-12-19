@@ -208,7 +208,10 @@ class Team:
         if effect == "damage":
             if target == "random":              # snake
                 damage = trigger["amount"]
-                random_index = opposing_team.get_random_indices(1, True)[0]
+                random_index = opposing_team.get_random_indices(1, True)
+                if len(random_index) < 1:
+                    return
+                random_index = random_index[0]
                 debug(f"  {friend_behind} damaging {opposing_team.battle_pets[random_index]} for {damage} damage")
                 opposing_team.on_hurt(random_index, damage, self)
 
@@ -256,6 +259,15 @@ class Team:
         for idx, pet in enumerate(starting_pets):
             if not pet:
                 continue
+
+            if pet.name == "parrot":        # fail-safe to get parrot's copy set up appropriately
+                if pet.copy_pet is None:
+                    if idx == 0:      # parrot is at front, no one to copy
+                        continue
+
+                    copy_pet = self.battle_pets[idx - 1]
+                    debug(f"  {pet} copying {copy_pet}")
+                    pet.copy_pet = copy_pet
 
             trigger = pet.on_battle_start()
 
@@ -857,7 +869,6 @@ class Team:
             target = trigger["target"]
 
             if effect == "copy":            # parrot
-                debug(f"  {pet} is a parrot?")
                 if index == 0:      # parrot is at front, no one to copy
                     continue
 

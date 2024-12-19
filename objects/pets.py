@@ -712,31 +712,40 @@ class Parrot(Animal):
     # all triggers that parrot can activate are in battle, below
 
     def on_friend_summon(self, friend: Animal):
-        pass
+        # turkey, horse - work independently
+        return self.copy_pet.on_friend_summon(friend)
 
     def on_faint(self):
-        pass
+        # so many fuckers >:(
+        # this one requires a relatively major overhaul I predict
+        return self.copy_pet.on_faint()
 
     def on_knockout(self):
-        pass
+        # rhino - works independently
+        # hippo - need to fix
+        return self.copy_pet.on_knockout()
 
     def on_hurt(self, other_attack: int, attacker: Animal = None):
-        pass
+        # peacock, camel, blowfish, gorilla
+        # this one requires an insane amount of overhaul tbh
+        return self.copy_pet.on_hurt(other_attack, attacker)
 
     def before_attack(self):
-        pass
+        # boar
+        return self.copy_pet.before_attack()
 
     def after_attack(self):
-        pass
+        # elephant - works independently
+        return self.copy_pet.after_attack()
 
     def on_friend_ahead_attack(self):
-        pass
+        return self.copy_pet.on_friend_ahead_attack()
 
     def on_friend_ahead_faints(self):
-        pass
+        return self.copy_pet.on_friend_ahead_faints()
 
     def on_friend_faint(self):
-        pass
+        return self.copy_pet.on_friend_faint()
 
 # TIER 5 ANIMALS
 class Scorpion(Animal):

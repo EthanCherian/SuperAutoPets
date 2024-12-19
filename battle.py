@@ -51,3 +51,15 @@ def battle(team1: Team, team2: Team):
     team2.reset()
 
     return winner
+
+team1 = Team("1")
+team1.add_pet(pets.GET_PET("hippo"), 0)
+
+
+team2 = Team("2")
+team2.add_pet(pets.GET_PET("sheep"), 0)
+team2.add_pet(pets.GET_PET("rooster"), 1)
+team2.add_pet(pets.GET_PET("horse"), 2)
+team2.add_pet(pets.GET_PET("parrot"), 3)
+
+battle(team1, team2)
