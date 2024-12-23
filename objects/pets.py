@@ -50,10 +50,16 @@ class Horse(Animal):
     def __init__(self):
         super().__init__("horse")
 
-    def on_friend_summon(self, friend: Animal):
+    def on_friend_summon(self):
         l = self.level() - 1
-        friend.receive_buff(self.attack_buff[l], 0, temporary=True)
-        debug(f"{self} giving {self.attack_buff[l]} attack to summoned {friend} @ {friend.get_battle_stats()}")
+        return {
+            "effect": "buff",
+            "target": "friend",
+            "amount": (self.attack_buff[l], 0),
+            "temporary": True
+        }
+        # friend.receive_buff(self.attack_buff[l], 0, temporary=True)
+        # debug(f"{self} giving {self.attack_buff[l]} attack to summoned {friend} @ {friend.get_battle_stats()}")
 
 class Ant(Animal):
     attack_buff = [1, 2, 3]
@@ -226,8 +232,13 @@ class Kangaroo(Animal):
     
     def on_friend_ahead_attack(self):
         l = self.level() - 1
-        self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
-        debug(f"  {self} gaining ({self.attack_buff[l]}, {self.health_buff[l]}) --> ({self.battle_attack}, {self.battle_health})")
+        return {
+            "effect": "buff",
+            "target": "self",
+            "amount": (self.attack_buff[l], self.health_buff[l])
+        }
+        # self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
+        # debug(f"  {self} gaining ({self.attack_buff[l]}, {self.health_buff[l]}) --> ({self.battle_attack}, {self.battle_health})")
 
 class Peacock(Animal):
     attack_buff = [4, 8, 12]
@@ -483,10 +494,15 @@ class Dog(Animal):
     def __init__(self):
         super().__init__("dog")
 
-    def on_friend_summon(self, friend: Animal):
+    def on_friend_summon(self):
         l = self.level() - 1
-        self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
-        debug(f"  {self} gaining {self.attack_buff[l], self.health_buff[l]} --> {self.battle_attack, self.battle_health}")
+        return {
+            "effect": "buff",
+            "target": "self",
+            "amount": (self.attack_buff[l], self.health_buff[l])
+        }
+        # self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
+        # debug(f"  {self} gaining {self.attack_buff[l], self.health_buff[l]} --> {self.battle_attack, self.battle_health}")
 
 class Sheep(Animal):
     ram_count: int = 2
@@ -711,9 +727,9 @@ class Parrot(Animal):
     
     # all triggers that parrot can activate are in battle, below
 
-    def on_friend_summon(self, friend: Animal):
+    def on_friend_summon(self):
         # turkey, horse - work independently
-        return self.copy_pet.on_friend_summon(friend)
+        return self.copy_pet.on_friend_summon()
 
     def on_faint(self):
         # so many fuckers >:(
@@ -890,7 +906,7 @@ class Turkey(Animal):
     def __init__(self):
         super().__init__("turkey")
 
-    def on_friend_summon(self, friend: Animal):
+    def on_friend_summon(self):
         l = self.level() - 1
         return {
             "effect": "buff",

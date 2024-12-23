@@ -168,7 +168,7 @@ class Animal:
     def on_battle_start(self):
         pass
 
-    def on_friend_summon(self, friend: Animal):
+    def on_friend_summon(self):
         pass
 
     def on_faint(self):
