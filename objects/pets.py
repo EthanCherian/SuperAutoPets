@@ -21,6 +21,7 @@ class Cricket(Animal):
         z = Animal("zombie cricket", self.exp, self.zomb_attack[l], self.zomb_health[l])
         # debug(f"{self} fainted, summoning {z} @ {z.get_battle_stats()}")
         ret.update({
+            "img": str(self),
             "effect": "summon",
             "target": "team",
             "token": z,
@@ -39,6 +40,7 @@ class Fish(Animal):
     def on_level_up(self):
         l = self.level() - 2
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "2",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -53,6 +55,7 @@ class Horse(Animal):
     def on_friend_summon(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "friend",
             "amount": (self.attack_buff[l], 0),
@@ -73,6 +76,7 @@ class Ant(Animal):
 
         l = self.level() - 1
         ret.update({
+            "img": str(self),
             "effect": "buff",
             "target": "random",
             "amount": (self.attack_buff[l], self.health_buff[l])
@@ -90,6 +94,7 @@ class Beaver(Animal):
     def on_sell(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "random",
             "amount": (self.attack_buff[l], 0),
@@ -105,6 +110,7 @@ class Duck(Animal):
     def on_sell(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "shop",
             "amount": (0, self.hp_buff[l])
@@ -120,6 +126,7 @@ class Mosquito(Animal):
     def on_battle_start(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "damage",
             "target": "random",
             "damage": self.damage,
@@ -136,6 +143,7 @@ class Otter(Animal):
     def on_buy(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "random",
             "amount": (0, self.health_buff),
@@ -151,6 +159,7 @@ class Pig(Animal):
     def on_sell(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "gold",
             "target": "shop",
             "amount": self.gold[l]
@@ -165,6 +174,7 @@ class Pigeon(Animal):
     def on_sell(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "stock",
             "target": "food",
             "food": "bread crumbs",
@@ -181,6 +191,7 @@ class Crab(Animal):
     def on_battle_start(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "copy",
             "target": "health",
             "amount": self.health_pct[l]
@@ -198,6 +209,7 @@ class Flamingo(Animal):
         
         l = self.level() - 1
         ret.update({
+            "img": str(self),
             "effect": "buff",
             "target": "2",
             "amount": (self.attack_buff[l], self.health_buff[l])
@@ -216,6 +228,7 @@ class Hedgehog(Animal):
 
         l = self.level() - 1
         ret.update({
+            "img": str(self),
             "effect": "damage",
             "target": "all",
             "amount": self.dmg[l]
@@ -233,6 +246,7 @@ class Kangaroo(Animal):
     def on_friend_ahead_attack(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "self",
             "amount": (self.attack_buff[l], self.health_buff[l])
@@ -255,6 +269,7 @@ class Peacock(Animal):
         ret = None
         if new_health != curr_health:       # actually got hurt
             ret = {
+                "img": str(self),
                 "effect": "buff",
                 "target": "self",
                 "amount": (self.attack_buff[l], 0)
@@ -274,6 +289,7 @@ class Rat(Animal):
         d = Animal("dirty rat")
         # debug(f"{self} fainted, summoning {d} @ {d.get_battle_stats()}")
         ret.update({
+            "img": str(self),
             "effect": "summon",
             "target": "enemy",
             "token": d,
@@ -291,6 +307,7 @@ class Snail(Animal):
     def on_end_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "on loss",
             "target": "team",
             "amount": (0, self.hp_buff[l])
@@ -315,6 +332,7 @@ class Spider(Animal):
         token.set_level(self.tkn_level[l])
 
         ret.update({
+            "img": str(self),
             "effect": "summon",
             "target": "team",
             "token": token,
@@ -332,6 +350,7 @@ class Swan(Animal):
     def on_start_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "gold": self.gold_gain[l]
         }
 
@@ -344,6 +363,7 @@ class Worm(Animal):
     def on_start_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "stock": self.apple_stock[l]
         }
 
@@ -357,6 +377,7 @@ class Dodo(Animal):
     def on_battle_start(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "attack",
             "amount": self.attack_pct[l]
@@ -373,6 +394,7 @@ class Badger(Animal):
 
         l = self.level() - 1
         ret.update({
+            "img": str(self),
             "effect": "damage",
             "target": "adjacent",
             "damage": int(self.damage_pct[l] * self.battle_attack)
@@ -390,6 +412,7 @@ class Dolphin(Animal):
     def on_battle_start(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "damage",
             "target": "lowest",
             "damage": self.damage,
@@ -406,6 +429,7 @@ class Giraffe(Animal):
     def on_end_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "ahead",
             "amount": self.buff,
@@ -422,6 +446,7 @@ class Elephant(Animal):
     def after_attack(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "damage",
             "target": "behind",
             "damage": self.damage,
@@ -444,6 +469,7 @@ class Camel(Animal):
         ret = None
         if new_health != curr_health:       # actually got hurt
             ret = {
+                "img": str(self),
                 "effect": "buff",
                 "target": "behind",
                 "amount": (self.attack_buff[l], self.health_buff[l])
@@ -459,6 +485,7 @@ class Rabbit(Animal):
     def on_friend_eats_food(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "ate",
             "amount": (0, self.health_buffs[l])
@@ -481,6 +508,7 @@ class Ox(Animal):
             self.curr_cnt += 1
             
             return {
+                "img": str(self),
                 "effect": "buff",
                 "target": "self",
                 "amount": (self.attack_buff, 0),
@@ -497,6 +525,7 @@ class Dog(Animal):
     def on_friend_summon(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "self",
             "amount": (self.attack_buff[l], self.health_buff[l])
@@ -517,6 +546,7 @@ class Sheep(Animal):
         r = Animal("ram", self.exp, self.ram_attack[l], self.ram_health[l])
         # debug(f"{self} fainted, summoning 2x {r} @ {r.get_battle_stats()}")
         return {
+            "img": str(self),
             "effect": "summon",
             "target": "team",
             "token": r,
@@ -533,6 +563,7 @@ class Skunk(Animal):
     def on_battle_start(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "debuff",
             "target": "health",
             "amount": self.health_decr[l]
@@ -548,6 +579,7 @@ class Hippo(Animal):
     def on_knockout(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "self",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -563,6 +595,7 @@ class Bison(Animal):
     def on_end_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "self",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -583,6 +616,7 @@ class Blowfish(Animal):
         ret = None
         if curr_health != new_health:
             ret = {
+                "img": str(self),
                 "effect": "damage",
                 "target": "random",
                 "damage": self.damage[l]
@@ -600,6 +634,7 @@ class Turtle(Animal):
 
         l = self.level() - 1
         ret.update({
+            "img": str(self),
             "effect": "perk",
             "target": "behind",
             "perk": 7,
@@ -617,6 +652,7 @@ class Squirrel(Animal):
     def on_start_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "shop": self.savings[l]
         }
 
@@ -631,6 +667,7 @@ class Penguin(Animal):
     def on_end_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "high level",
             "amount": (self.atk_buff[l], self.hp_buff[l]),
@@ -655,6 +692,7 @@ class Deer(Animal):
         # b.receive_perk(5)
         # debug(f"{self} fainted, summoning {b} @ {b.get_battle_stats()}")
         ret.update({
+            "img": str(self),
             "effect": "summon",
             "target": "team",
             "token": b,
@@ -675,6 +713,7 @@ class Whale(Animal):
     
     def on_battle_start(self):
         return {
+            "img": str(self),
             "effect": "faint",
             "target": "ahead"
         }
@@ -688,6 +727,7 @@ class Whale(Animal):
             self.summon_pet.prepare_battle()
             # debug(f"{self} fainted, summoning {self.summon_pet} @ {self.summon_pet.get_battle_stats()}")
             ret.update({
+                "img": str(self),
                 "effect": "summon",
                 "target": "team",
                 "token": self.summon_pet,
@@ -709,6 +749,7 @@ class Parrot(Animal):
 
     def on_end_turn(self):
         return {
+            "img": str(self),
             "effect": "copy",
             "target": "ahead",
         }
@@ -783,6 +824,7 @@ class Crocodile(Animal):
         l = self.level() - 1
 
         return {
+            "img": str(self),
             "effect": "damage",
             "target": "last",
             "damage": self.damage,
@@ -798,6 +840,7 @@ class Rhino(Animal):
     def on_knockout(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "damage",
             "target": "next",
             "damage": self.damage[l]
@@ -813,6 +856,7 @@ class Monkey(Animal):
     def on_end_turn(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "front",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -828,6 +872,7 @@ class Armadillo(Animal):
         l = self.level() - 1
 
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "all",
             "amount": (0, self.hp_buff[l])
@@ -842,6 +887,7 @@ class Cow(Animal):
     def on_buy(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "stock",
             "target": "shop",
             "stock": self.milk_stock[l]
@@ -856,6 +902,7 @@ class Seal(Animal):
     def on_food_eaten(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "3",
             "amount": self.atk_buff[l]
@@ -876,6 +923,7 @@ class Rooster(Animal):
         c.set_stats(int(self.dmg_pct * self.battle_attack), 1)
         # debug(f"{self} fainted, summoning {self.chick_cnt[l]}x {c} @ {c.get_battle_stats()}")
         ret.update({
+            "img": str(self),
             "effect": "summon",
             "target": "team",
             "token": c,
@@ -894,6 +942,7 @@ class Shark(Animal):
     def on_friend_faint(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "self",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -909,6 +958,7 @@ class Turkey(Animal):
     def on_friend_summon(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "friend",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -925,6 +975,7 @@ class Leopard(Animal):
     def on_battle_start(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "damage",
             "target": "random",
             "damage": int(self.damage_pct * self.battle_attack),
@@ -940,7 +991,13 @@ class Boar(Animal):
     
     def before_attack(self):
         l = self.level() - 1
-        self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
+        return {
+            "img": str(self),
+            "effect": "buff",
+            "target": "self",
+            "amount": (self.attack_buff[l], self.health_buff[l])
+        }
+        # self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
         # debug(f"  {self} gaining ({self.attack_buff[l]}, {self.health_buff[l]}) --> ({self.battle_attack}, {self.battle_health})")
 
 class Tiger(Animal):
@@ -978,8 +1035,14 @@ class Gorilla(Animal):
         if self.curr_cnt < self.perk_cnt[l]:
             # debug(f"  {self} hurt, gaining coconut")
             # TODO: this should prob be done in team, not here; armor need not always be temporary
-            self.receive_perk(11, temporary=True)       # give coconut
+            # self.receive_perk(11, temporary=True)       # give coconut
             self.curr_cnt += 1
+            return {
+                "img": str(self),
+                "effect": "perk",
+                "target": "self",
+                "perk": 11
+            }
 
 class Dragon(Animal):
     atk_buff = [1, 2, 3]
@@ -994,6 +1057,7 @@ class Dragon(Animal):
 
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "buff",
             "target": "friends",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -1012,6 +1076,7 @@ class Mammoth(Animal):
         l = self.level() - 1
 
         ret.update({
+            "img": str(self),
             "effect": "buff",
             "target": "friends",
             "amount": (self.atk_buff[l], self.hp_buff[l])
@@ -1034,6 +1099,7 @@ class Cat(Animal):
         if self.mult_cnt > 0:
             self.mult_cnt -= 1
             return {
+                "img": str(self),
                 "effect": "increase",
                 "target": "ate",
                 "amount": self.food_inc_pct[l]
@@ -1048,6 +1114,7 @@ class Snake(Animal):
     def on_friend_ahead_attack(self):
         l = self.level() - 1
         return {
+            "img": str(self),
             "effect": "damage",
             "target": "random",
             "amount": self.damage[l]
@@ -1071,6 +1138,7 @@ class Fly(Animal):
             f = Animal("zombie fly", self.exp, self.zomb_atk[l], self.zomb_hp[l])
 
             return {
+                "img": str(self),
                 "effect": "summon",
                 "target": "team",
                 "token": f,

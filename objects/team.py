@@ -182,8 +182,15 @@ class Team:
     def before_attack(self):
         if len(self.battle_pets) < 1:
             return
-        # only boar, who can handle itself
-        self.battle_pets[0].before_attack()
+        # only boar
+        pet = self.battle_pets[0]
+        trigger = pet.before_attack()
+        if trigger is None:
+            return
+        
+        if trigger["effect"] == "buff":
+            attack_buff, health_buff = trigger["amount"]
+            pet.receive_buff(attack_buff, health_buff, temporary=True)
 
     def friend_ahead_attacks(self, opposing_team: Team, friend_ahead: Animal):
         if len(self.battle_pets) == 0:
@@ -198,7 +205,7 @@ class Team:
         if not friend_behind:
             return
 
-        trigger = friend_behind.on_friend_ahead_attack()        # kangaroo, which handles itself
+        trigger = friend_behind.on_friend_ahead_attack()
         if trigger is None:
             return
 
@@ -214,6 +221,12 @@ class Team:
                 random_index = random_index[0]
                 debug(f"  {friend_behind} damaging {opposing_team.battle_pets[random_index]} for {damage} damage")
                 opposing_team.on_hurt(random_index, damage, self)
+        
+        if effect == "buff":                    # kangaroo
+            if target == "self":
+                attack_buff, health_buff = trigger["amount"]
+                debug(f"  {friend_behind} buffing self w/ {(attack_buff, health_buff)}")
+                friend_behind.receive_buff(attack_buff, health_buff, temporary=True)
 
     def after_attack(self, opposing_team: Team):
         if len(self.battle_pets) < 1:
@@ -534,19 +547,24 @@ class Team:
         pets = self.battle_pets if in_battle else self.pets
         for pet in pets:
             if pet and pet is not friend:
-                trigger = pet.on_friend_summon(friend)          # dog and horse handle themselves
+                trigger = pet.on_friend_summon()
                 if not trigger:
                     continue
 
                 effect = trigger["effect"]
                 target = trigger["target"]
 
-                if effect == "buff":                            # turkey
-                    if target == "friend":
-                        attack_buff, health_buff = trigger["amount"]
+                if effect == "buff":
+                    attack_buff, health_buff = trigger["amount"]
+                    if target == "friend":      # turkey + horse
+                        temporary = True if "temporary" in trigger else in_battle
 
-                        friend.receive_buff(attack_buff, health_buff, temporary=in_battle)
+                        friend.receive_buff(attack_buff, health_buff, temporary=temporary)
                         debug(f"  {pet} buffing {friend} for {attack_buff, health_buff} --> {friend.get_battle_stats()}")
+                    
+                    if target == "self":        # dog
+                        pet.receive_buff(attack_buff, health_buff, temporary=True)
+
 
     def on_hurt(self, index: int, damage: int, opposing_team: Team, in_battle: bool = True, attacker: Animal = None):
         # handle "hurt" abilities
@@ -585,8 +603,9 @@ class Team:
                 debug(f"  {pet} giving {attack_buff, health_buff} to {pet_behind}")
                 pet_behind.receive_buff(attack_buff, health_buff, temporary=in_battle)
 
-        elif effect == "perk":              # gorilla (handles itself)
-            pass
+        elif effect == "perk":              # gorilla
+            perk = int(trigger["perk"])
+            pet.receive_perk(perk, temporary=in_battle)
 
         return pet_fainted
 
