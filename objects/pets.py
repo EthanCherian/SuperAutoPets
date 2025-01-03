@@ -781,7 +781,15 @@ class Parrot(Animal):
 
     def on_faint(self):
         # ant, cricket, flamingo, hedgehog, rat, spider, badger, sheep, turtle, deer, rooster, mammoth
-        return self.copy_pet.on_faint()
+        trigger = self.copy_pet.on_faint()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        # rooster's chicks need to scale off parrot's attack, handle that here
+        if self.copy_pet.name == "rooster":
+            trigger["token"].set_stats(int(self.battle_attack * 0.5), 1)
+        return trigger
 
     def on_knockout(self):
         # rhino, hippo

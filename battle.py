@@ -53,12 +53,12 @@ def battle(team1: Team, team2: Team):
     return winner
 
 team1 = Team("1")
-team1.add_pet(pets.GET_PET("camel"), 0)
+team1.add_pet(pets.GET_PET("mammoth"), 0)
 parrot = pets.GET_PET("parrot")
-parrot.receive_perk(7)
+parrot.set_level(2)
 team1.add_pet(parrot, 1)
-team1.add_pet(pets.GET_PET("rat"), 2)
-
+team1.add_pet(pets.GET_PET("cat"), 2)
+team1.add_pet(pets.GET_PET("gorilla"), 3)
 
 
 team2 = Team("2")
