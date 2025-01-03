@@ -12,7 +12,7 @@ To run the program, simply execute the following command in the root directory:
 python3 super_auto_pets.py
 ```
 
-* *I believe* that only the inbuilt terminal in Visual Studio Code can display emojis, so you should decline those when prompted otherwise.
+* *I believe* that only the inbuilt terminal in Visual Studio Code can display emojis, so you should decline those when prompted if you're using another terminal.
 * Your "team name" may be anything you wish.
 * I would recommend agreeing to backup your teams. They'll be added to the `data` folder, so you may battle against them later. Otherwise, you'll simply be facing the handful of teams that I happened to create, which should also work perfectly fine.
 

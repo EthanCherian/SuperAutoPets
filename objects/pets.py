@@ -19,7 +19,6 @@ class Cricket(Animal):
         l = self.level() - 1
         # summon zombie cricket
         z = Animal("zombie cricket", self.exp, self.zomb_attack[l], self.zomb_health[l])
-        # debug(f"{self} fainted, summoning {z} @ {z.get_battle_stats()}")
         ret.update({
             "img": str(self),
             "effect": "summon",
@@ -62,7 +61,6 @@ class Horse(Animal):
             "temporary": True
         }
         # friend.receive_buff(self.attack_buff[l], 0, temporary=True)
-        # debug(f"{self} giving {self.attack_buff[l]} attack to summoned {friend} @ {friend.get_battle_stats()}")
 
 class Ant(Animal):
     attack_buff = [1, 2, 3]
@@ -252,7 +250,6 @@ class Kangaroo(Animal):
             "amount": (self.attack_buff[l], self.health_buff[l])
         }
         # self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
-        # debug(f"  {self} gaining ({self.attack_buff[l]}, {self.health_buff[l]}) --> ({self.battle_attack}, {self.battle_health})")
 
 class Peacock(Animal):
     attack_buff = [4, 8, 12]
@@ -287,7 +284,6 @@ class Rat(Animal):
 
         l = self.level() - 1
         d = Animal("dirty rat")
-        # debug(f"{self} fainted, summoning {d} @ {d.get_battle_stats()}")
         ret.update({
             "img": str(self),
             "effect": "summon",
@@ -327,7 +323,6 @@ class Spider(Animal):
         l = self.level() - 1
         name = get_random_pet_from_tiers([3])[0]
         token = copy.copy(CREATE_PET[name])
-        # debug(f"{self} fainted, summoning {token} @ {self.tkn_attack[l], self.tkn_health[l]}")
         token.set_stats(self.tkn_attack[l], self.tkn_health[l])
         token.set_level(self.tkn_level[l])
 
@@ -531,7 +526,6 @@ class Dog(Animal):
             "amount": (self.attack_buff[l], self.health_buff[l])
         }
         # self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
-        # debug(f"  {self} gaining {self.attack_buff[l], self.health_buff[l]} --> {self.battle_attack, self.battle_health}")
 
 class Sheep(Animal):
     ram_count: int = 2
@@ -544,7 +538,6 @@ class Sheep(Animal):
     def on_faint(self):
         l = self.level() - 1
         r = Animal("ram", self.exp, self.ram_attack[l], self.ram_health[l])
-        # debug(f"{self} fainted, summoning 2x {r} @ {r.get_battle_stats()}")
         return {
             "img": str(self),
             "effect": "summon",
@@ -690,7 +683,6 @@ class Deer(Animal):
         b = Animal("bus", self.exp, self.bus_atk[l], self.bus_hp[l])
         b.set_level(self.bus_lvl[l])
         # b.receive_perk(5)
-        # debug(f"{self} fainted, summoning {b} @ {b.get_battle_stats()}")
         ret.update({
             "img": str(self),
             "effect": "summon",
@@ -725,7 +717,6 @@ class Whale(Animal):
         if self.summon_pet is not None:
             self.summon_pet.set_level(self.summon_lvl[l])
             self.summon_pet.prepare_battle()
-            # debug(f"{self} fainted, summoning {self.summon_pet} @ {self.summon_pet.get_battle_stats()}")
             ret.update({
                 "img": str(self),
                 "effect": "summon",
@@ -981,7 +972,6 @@ class Rooster(Animal):
         l = self.level() - 1
         c = Animal("chick", self.exp)
         c.set_stats(int(self.dmg_pct * self.battle_attack), 1)
-        # debug(f"{self} fainted, summoning {self.chick_cnt[l]}x {c} @ {c.get_battle_stats()}")
         ret.update({
             "img": str(self),
             "effect": "summon",
@@ -1058,7 +1048,6 @@ class Boar(Animal):
             "amount": (self.attack_buff[l], self.health_buff[l])
         }
         # self.receive_buff(self.attack_buff[l], self.health_buff[l], temporary=True)
-        # debug(f"  {self} gaining ({self.attack_buff[l]}, {self.health_buff[l]}) --> ({self.battle_attack}, {self.battle_health})")
 
 class Tiger(Animal):
     def __init__(self):
@@ -1093,9 +1082,6 @@ class Gorilla(Animal):
         
         l = self.level() - 1
         if self.curr_cnt < self.perk_cnt[l]:
-            # debug(f"  {self} hurt, gaining coconut")
-            # TODO: this should prob be done in team, not here; armor need not always be temporary
-            # self.receive_perk(11, temporary=True)       # give coconut
             self.curr_cnt += 1
             return {
                 "img": str(self),
