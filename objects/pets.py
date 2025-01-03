@@ -770,6 +770,8 @@ class Parrot(Animal):
 
     def on_friend_summon(self):
         # turkey, horse, dog
+        if self.copy_pet is None:
+            return
         trigger = self.copy_pet.on_friend_summon()
         if trigger is None:
             return
@@ -778,8 +780,7 @@ class Parrot(Animal):
         return trigger
 
     def on_faint(self):
-        # so many fuckers >:(
-        # this one requires a relatively major overhaul I predict
+        # ant, cricket, flamingo, hedgehog, rat, spider, badger, sheep, turtle, deer, rooster, mammoth
         return self.copy_pet.on_faint()
 
     def on_knockout(self):
@@ -793,8 +794,18 @@ class Parrot(Animal):
 
     def on_hurt(self, other_attack: int, attacker: Animal = None):
         # peacock, camel, blowfish, gorilla
-        # this one requires an insane amount of overhaul tbh
-        return self.copy_pet.on_hurt(other_attack, attacker)
+        curr_health = self.battle_health
+        super().on_hurt(other_attack, attacker)
+        new_health = self.battle_health
+        trigger = self.copy_pet.on_hurt(other_attack, attacker)
+        if trigger is None:
+            return
+
+        if new_health != curr_health:
+            trigger["img"] = str(self)
+            return trigger
+
+        return
 
     def before_attack(self):
         # boar
@@ -834,6 +845,8 @@ class Parrot(Animal):
 
     def on_friend_faint(self):
         # shark, fly*
+        if self.copy_pet is None:
+            return
         trigger = self.copy_pet.on_friend_faint()
         if trigger is None:
             return
