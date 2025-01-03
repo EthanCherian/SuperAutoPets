@@ -1,4 +1,4 @@
-from utils.helpers import debug, error, warning, success
+from utils.helpers import debug, red, yellow, green
 from objects import pets
 from objects.team import Team
 
@@ -35,15 +35,15 @@ def battle(team1: Team, team2: Team):
         debug("")
 
     if len(team1.battle_pets) > 0:
-        success(f" Team {team1.name} wins! ")
+        green(f" Team {team1.name} wins! ")
         winner = team1.name
         team1.print()
     elif len(team2.battle_pets) > 0:
-        success(f" Team {team2.name} wins! ")
+        green(f" Team {team2.name} wins! ")
         winner = team2.name
         team2.print()
     else:
-        success(" It's a draw! ")
+        green(" It's a draw! ")
 
     debug("")
 

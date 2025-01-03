@@ -6,7 +6,7 @@ import copy
 from objects.animal import Animal
 from objects import pets as PETS
 from objects.food import Food, PERK_EMOJIS, PERKS, GET_FOOD
-from utils.helpers import debug, error, warning, success, info, shop_exp_display
+from utils.helpers import debug, red, yellow, green, info, shop_exp_display
 
 class Team:
     name: str = ""
@@ -34,7 +34,7 @@ class Team:
         self.lost_last_battle = True
 
     def print(self):
-        [success(f"{pet}  @ {pet.get_battle_stats()}") for pet in self.battle_pets]
+        [green(f"{pet}  @ {pet.get_battle_stats()}") for pet in self.battle_pets]
 
     def shop_display(self):
         ret = "FRONT --> "

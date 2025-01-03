@@ -2,7 +2,7 @@ from typing import Dict
 import copy
 
 from objects.animal import Animal
-from utils.helpers import debug, error, warning, success
+from utils.helpers import debug, red, yellow, green
 from utils.helpers import get_random_pet_from_tiers
 
 # TIER 1 ANIMALS

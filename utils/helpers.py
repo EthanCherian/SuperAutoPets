@@ -13,25 +13,20 @@ def debug(text):
     if flag:
         print(text)
 
-def error(text):
-    if flag:
-        print(f'\033[91m    ** {text} **\033[0m')
+def red(text):
+    print(f'\033[91m    ** {text} **\033[0m')
 
-def warning(text):
-    if flag:
-        print(f'\033[93m    ** {text} **\033[0m')
+def yellow(text):
+    print(f'\033[93m    ** {text} **\033[0m')
 
-def success(text):
-    if flag:
-        print(f'\033[92m    ** {text} **\033[0m')
+def green(text):
+    print(f'\033[92m    ** {text} **\033[0m')
 
-def show(text):
-    if flag:
-        print(f'\033[95m{text}\033[0m')
+def purple(text):
+    print(f'\033[95m{text}\033[0m')
 
 def blue(text):
-    if flag:
-        print(f'\033[94m {text} \033[0m')
+    print(f'\033[94m {text} \033[0m')
 
 def info(a: Animal, battle=False):
     temp = a.get_info(battle=battle)

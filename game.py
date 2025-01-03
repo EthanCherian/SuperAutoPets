@@ -3,7 +3,7 @@ from objects.shop import Shop
 from battle import battle
 
 from utils.team_file_io import import_team, export_team
-from utils.helpers import debug, error, warning, success, get_random_id
+from utils.helpers import debug, red, yellow, green, get_random_id
 
 class Game:
     TURN: int = 1
@@ -30,7 +30,7 @@ class Game:
             # battle phase
             # comment out the next three lines to skip battle phase
             try:
-                temp_team = import_team("opponent", get_random_id(), self.TURN)
+                temp_team = import_team("opponent", get_random_id(exclude_id=team_id), self.TURN)
             except Exception as e:
                 print("No opposing team found, moving on...")
                 continue
@@ -42,20 +42,20 @@ class Game:
             self.TURN += 1
 
         if self.TEAM.num_wins == 10:
-            success("You won!")
+            green("You won!")
         else:
-            error("You lost!")
+            red("You lost!")
 
         self.TEAM.full_info()
 
     def handle_winner(self, winner: str):
         if winner == self.TEAM.name:        # team won
             self.TEAM.num_wins += 1
-            print(f"  You have {self.TEAM.num_wins} win(s)!")
+            green(f"  You have {self.TEAM.num_wins} win(s)!")
 
         elif winner == "":                  # draw
             pass
 
         else:                               # team lost
             self.TEAM.num_lives -= 1
-            print(f"  You have {self.TEAM.num_lives} lives remaining!")
+            red(f"  You have {self.TEAM.num_lives} lives remaining!")

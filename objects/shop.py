@@ -2,7 +2,7 @@ import math
 from typing import List
 
 from utils.helpers import get_random_pet_from_tiers, get_random_food_from_tiers
-from utils.helpers import debug, error, warning, success, blue, show, shop_exp_display
+from utils.helpers import debug, red, yellow, green, blue, purple, shop_exp_display
 from utils.constants import GOLD_EMOJI, FREEZE_EMOJI, SPECIAL_EMOJI
 from objects.pets import GET_PET
 from objects.food import GET_FOOD, Food
@@ -78,7 +78,7 @@ class Shop:
         self.HIGHEST_TIER_PET = min(self.HIGHEST_TIER_PET, 6)
 
         if old_highest_tier != self.HIGHEST_TIER_PET:
-            success(f"Pets/foods up to tier {self.HIGHEST_TIER_PET} now available!")
+            green(f"Pets/foods up to tier {self.HIGHEST_TIER_PET} now available!")
         
         self.NUM_ANIMAL_SLOTS = 3 + math.floor((self.TURN - 1) / 4)
         self.NUM_ANIMAL_SLOTS = min(self.NUM_ANIMAL_SLOTS, 5)
@@ -141,27 +141,27 @@ class Shop:
             if index not in self.frozen_pets: 
                 self.frozen_pets.append(index)
             else:
-                warning(f"{index} already frozen")
+                yellow(f"{index} already frozen")
         else:
             if index not in self.frozen_foods:
                 self.frozen_foods.append(index)
             else:
-                warning(f"{index} already frozen")
+                yellow(f"{index} already frozen")
 
     def unfreeze(self, index: int, pets: bool = True):
         if pets:
             if index in self.frozen_pets: 
                 self.frozen_pets.remove(index)
             else:
-                warning(f"{index} not frozen")
+                yellow(f"{index} not frozen")
         else:
             if index in self.frozen_foods:
                 self.frozen_foods.remove(index)
             else:
-                warning(f"{index} not frozen")
+                yellow(f"{index} not frozen")
 
     def roll(self):
-        show("Rolling shop...")
+        purple("Rolling shop...")
         
         # get rid of any excess pets/foods beyond slot limits
         if len(self.pets) > self.NUM_ANIMAL_SLOTS:
@@ -214,7 +214,7 @@ class Shop:
     def end_turn(self):
         # verify that user is okay wasting excess gold
         if self.gold > 0:
-            warning(f"You have {self.gold} {GOLD_EMOJI} left, it will be discarded if you end turn.")
+            yellow(f"You have {self.gold} {GOLD_EMOJI} left, it will be discarded if you end turn.")
             gold_check = input("End turn anyway? (y/n) ").lower()
             if gold_check != "y" and gold_check != "yes":
                 return False
@@ -227,25 +227,25 @@ class Shop:
         self.start_turn()
 
         while True:
-            show("\nYour team:\n")
+            purple("\nYour team:\n")
             print(self.team.shop_display())
 
-            show("\nShop:")
-            show(f"You have {self.gold} {GOLD_EMOJI}.")
+            purple("\nShop:")
+            purple(f"You have {self.gold} {GOLD_EMOJI}.")
             print(self)
 
-            show("Options:\n")
-            show(f"   [{self.USER_OPTIONS['buy pet']}]  Buy pet")
-            show(f"   [{self.USER_OPTIONS['sell pet']}]  Sell pet")
-            show(f"   [{self.USER_OPTIONS['rearrange pet']}]  Rearrange pets\n")
+            purple("Options:\n")
+            purple(f"   [{self.USER_OPTIONS['buy pet']}]  Buy pet")
+            purple(f"   [{self.USER_OPTIONS['sell pet']}]  Sell pet")
+            purple(f"   [{self.USER_OPTIONS['rearrange pet']}]  Rearrange pets\n")
 
-            show(f"   [{self.USER_OPTIONS['buy food']}]  Buy food\n")
+            purple(f"   [{self.USER_OPTIONS['buy food']}]  Buy food\n")
 
-            show(f"   [{self.USER_OPTIONS['freeze pet']}]  Freeze/unfreeze pet")
-            show(f"   [{self.USER_OPTIONS['freeze food']}]  Freeze/unfreeze food\n")
+            purple(f"   [{self.USER_OPTIONS['freeze pet']}]  Freeze/unfreeze pet")
+            purple(f"   [{self.USER_OPTIONS['freeze food']}]  Freeze/unfreeze food\n")
 
-            show(f"   [{self.USER_OPTIONS['roll shop']}]  Roll shop")
-            show(f"   [{self.USER_OPTIONS['end turn']}]  End turn")
+            purple(f"   [{self.USER_OPTIONS['roll shop']}]  Roll shop")
+            purple(f"   [{self.USER_OPTIONS['end turn']}]  End turn")
 
             user_input = input("\nWhat do you want to do? ")
             print()
@@ -255,7 +255,7 @@ class Shop:
                 if user_input < 1 or user_input > 9:
                     raise ValueError
             except:
-                warning("Invalid input")
+                yellow("Invalid input")
 
             if user_input == self.USER_OPTIONS["buy pet"]:
                 self.buy_pet()
@@ -280,11 +280,11 @@ class Shop:
                     self.gold -= 1
                     self.roll()
                 else:
-                    warning("Not enough gold")
+                    yellow("Not enough gold")
                     continue
 
             if user_input == self.USER_OPTIONS["end turn"]:
-                show("Ending turn...")
+                purple("Ending turn...")
 
                 end = self.end_turn()
                 if end:
@@ -292,11 +292,11 @@ class Shop:
 
     def buy_pet(self):
         if self.gold < 3:
-            warning("Not enough gold")
+            yellow("Not enough gold")
             return
 
         if len(self.pets) < 1:
-            warning("Shop is empty")
+            yellow("Shop is empty")
             return
 
         shop_idx = input("Which pet do you want to buy? Enter the index: ")
@@ -306,7 +306,7 @@ class Shop:
             if shop_idx < 1 or shop_idx > len(self.pets):
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         pet = self.pets[shop_idx - 1]
@@ -318,20 +318,20 @@ class Shop:
             if team_idx < 1 or team_idx > 5:
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         combine = False
         if self.team.pets[team_idx - 1] is not None:
             occupied = self.team.pets[team_idx - 1]
-            warning(f"Slot {team_idx} is occupied by {occupied}")
+            yellow(f"Slot {team_idx} is occupied by {occupied}")
             if occupied.name == pet.name:
                 usr_comb = input("Do you want to combine them? (y/n) ").lower()
                 combine = usr_comb == "y" or usr_comb == "yes"
 
         trigger = self.team.on_pet_buy(pet, team_idx - 1, combine)
         if "failed" in trigger:
-            warning(f"Purchase failed")
+            yellow(f"Purchase failed")
             return
 
         self.team.on_friend_buy(pet)
@@ -340,7 +340,7 @@ class Shop:
             self.frozen_pets.remove(shop_idx)
         self.gold -= 3
 
-        show(f"You bought {pet} for 3 gold.")
+        purple(f"You bought {pet} for 3 gold.")
         # handle remaining "on buy" abilities (ie. those interacting with shop)
 
         if "stock" in trigger:              # cow
@@ -364,20 +364,20 @@ class Shop:
             if team_idx < 1 or team_idx > 5:
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         pet = self.team.pets[team_idx - 1]
 
         if pet == None:
-            warning(f"No pet at index {team_idx}")
+            yellow(f"No pet at index {team_idx}")
             return
 
         trigger = self.team.on_pet_sell(team_idx - 1)
         gold_returned = trigger["gold returned"]
         self.gold += gold_returned
 
-        show(f"You sold your {pet} for {gold_returned} {GOLD_EMOJI}.")
+        purple(f"You sold your {pet} for {gold_returned} {GOLD_EMOJI}.")
         # handle remaining "on sell abilities" (ie. those interacting with shop)
 
         if "effect" not in trigger:
@@ -410,11 +410,11 @@ class Shop:
             if team_idx_1 < 1 or team_idx_1 > 5:
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         if self.team.pets[team_idx_1 - 1] is None:
-            warning(f"No pet at index {team_idx_1}")
+            yellow(f"No pet at index {team_idx_1}")
             return
 
         team_idx_2 = input("Where should it go? Enter the index: ")
@@ -424,17 +424,17 @@ class Shop:
             if team_idx_2 < 1 or team_idx_2 > 5:
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         if team_idx_1 == team_idx_2:
-            warning(f"Can't move pet to same index {team_idx_1}")
+            yellow(f"Can't move pet to same index {team_idx_1}")
             return
 
         pet1 = self.team.pets[team_idx_1 - 1]
 
         if self.team.pets[team_idx_2 - 1] is None:
-            warning(f"Moving {pet1} to slot {team_idx_2}")
+            yellow(f"Moving {pet1} to slot {team_idx_2}")
             self.team.pets[team_idx_2 - 1] = pet1
             self.team.pets[team_idx_1 - 1] = None
             return
@@ -447,18 +447,18 @@ class Shop:
 
         if combine:
             # combine pets
-            warning(f"Combining {pet1} and {pet2}")
+            yellow(f"Combining {pet1} and {pet2}")
             trigger = self.team.combine_pets(team_idx_1 - 1, team_idx_2 - 1)
             self.handle_level_up(trigger)
 
         else:
             # swap pets
-            warning(f"Swapping {pet1} and {pet2}")
+            yellow(f"Swapping {pet1} and {pet2}")
             self.team.switch_pets(team_idx_1 - 1, team_idx_2 - 1)
 
     def buy_food(self):
         if len(self.foods) < 1:
-            warning("Shop is empty")
+            yellow("Shop is empty")
             return
 
         shop_idx = input("Which food do you want to buy? Enter the index: ")
@@ -468,13 +468,13 @@ class Shop:
             if shop_idx < 1 or shop_idx > len(self.foods):
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         food = self.foods[shop_idx - 1]
 
         if self.gold < food.cost:
-            warning("Not enough gold")
+            yellow("Not enough gold")
             return
 
         self.gold -= food.cost
@@ -485,7 +485,7 @@ class Shop:
         if food.shop:             # canned food purchased
             # can is so different from other foods, need to handle separately
             trigger = self.team.on_shop_food_buy(food)
-            show(f"{food} purchased")
+            purple(f"{food} purchased")
 
             pct_increase = trigger["increase"]
             base_effects = food.get_stats()
@@ -500,7 +500,7 @@ class Shop:
         elif food.count > 1:      # distributed food
             team_idcs = self.team.get_random_indices(food.count, False)
 
-            show(f"{food} distributed to {[str(self.team.pets[i]) for i in team_idcs]}")
+            purple(f"{food} distributed to {[str(self.team.pets[i]) for i in team_idcs]}")
 
             for team_idx in team_idcs:
                 self.team.on_food_eat(team_idx, food)
@@ -513,11 +513,11 @@ class Shop:
                 if team_idx < 1 or team_idx > 5:
                     raise ValueError
             except:
-                warning("Invalid input")
+                yellow("Invalid input")
                 return
 
             if self.team.pets[team_idx - 1] is None:
-                warning(f"No pet at index {team_idx - 1}")
+                yellow(f"No pet at index {team_idx - 1}")
                 return
 
             trigger = self.team.on_food_eat(team_idx - 1, food)
@@ -535,15 +535,15 @@ class Shop:
             if frz_idx < 1 or frz_idx > len(self.pets):
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         if frz_idx - 1 in self.frozen_pets:
             self.frozen_pets.remove(frz_idx - 1)
-            show(f"You unfroze {self.pets[frz_idx - 1]}")
+            purple(f"You unfroze {self.pets[frz_idx - 1]}")
         else:
             self.frozen_pets.append(frz_idx - 1)
-            show(f"You froze {self.pets[frz_idx - 1]}")
+            purple(f"You froze {self.pets[frz_idx - 1]}")
 
     def freeze_food(self):
         frz_idx = input("Which food do you want to freeze/unfreeze? Enter the index: ")
@@ -553,22 +553,22 @@ class Shop:
             if frz_idx < 1 or frz_idx > len(self.foods):
                 raise ValueError
         except:
-            warning("Invalid input")
+            yellow("Invalid input")
             return
 
         if frz_idx - 1 in self.frozen_foods:
             self.frozen_foods.remove(frz_idx - 1)
-            show(f"You unfroze {self.foods[frz_idx - 1]}")
+            purple(f"You unfroze {self.foods[frz_idx - 1]}")
         else:
             self.frozen_foods.append(frz_idx - 1)
-            show(f"You froze {self.foods[frz_idx - 1]}")
+            purple(f"You froze {self.foods[frz_idx - 1]}")
 
     def handle_level_up(self, trigger):
         # if pet levels up, add new pet to shop from next highest tier
         if trigger is None or "level up" not in trigger:
             return
 
-        show(f"A pet levelled up, generating new pet of higher tier!")
+        purple(f"A pet levelled up, generating new pet of higher tier!")
 
         higher_tier = self.HIGHEST_TIER_PET + 1
         higher_tier = min(higher_tier, 6)           # cap at 6
