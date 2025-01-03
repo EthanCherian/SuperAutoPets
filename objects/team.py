@@ -187,9 +187,11 @@ class Team:
         trigger = pet.before_attack()
         if trigger is None:
             return
+        img = trigger["img"]
         
         if trigger["effect"] == "buff":
             attack_buff, health_buff = trigger["amount"]
+            debug(f"  {img} buffing self w/ {(attack_buff, health_buff)}")
             pet.receive_buff(attack_buff, health_buff, temporary=True)
 
     def friend_ahead_attacks(self, opposing_team: Team, friend_ahead: Animal):
@@ -211,6 +213,7 @@ class Team:
 
         effect = trigger["effect"]
         target = trigger["target"]
+        img = trigger["img"]
 
         if effect == "damage":
             if target == "random":              # snake
@@ -219,13 +222,13 @@ class Team:
                 if len(random_index) < 1:
                     return
                 random_index = random_index[0]
-                debug(f"  {friend_behind} damaging {opposing_team.battle_pets[random_index]} for {damage} damage")
+                debug(f"  {img} damaging {opposing_team.battle_pets[random_index]} for {damage} damage")
                 opposing_team.on_hurt(random_index, damage, self)
         
         if effect == "buff":                    # kangaroo
             if target == "self":
                 attack_buff, health_buff = trigger["amount"]
-                debug(f"  {friend_behind} buffing self w/ {(attack_buff, health_buff)}")
+                debug(f"  {img} buffing self w/ {(attack_buff, health_buff)}")
                 friend_behind.receive_buff(attack_buff, health_buff, temporary=True)
 
     def after_attack(self, opposing_team: Team):
@@ -240,6 +243,7 @@ class Team:
         
         effect = trigger["effect"]
         target = trigger["target"]
+        img = trigger["img"]
 
         if effect == "damage":
             if target == "behind":
@@ -249,7 +253,7 @@ class Team:
                     if index >= len(self.battle_pets):
                         break
 
-                    debug(f"  {self.battle_pets[0]} damaging {self.battle_pets[index]} for {damage} damage")
+                    debug(f"  {img} damaging {self.battle_pets[index]} for {damage} damage")
                     self.on_hurt(index, damage, opposing_team)
 
     def on_battle_start(self, opposing_team: Team):
@@ -289,6 +293,7 @@ class Team:
 
             effect = trigger["effect"]
             target = trigger["target"]
+            img = trigger["img"]
 
             if effect == "damage":
                 # set up opposing team if needed
@@ -301,20 +306,20 @@ class Team:
                     random_indices = opposing_team.get_random_indices(count, True)
                     
                     for index in random_indices:
-                        debug(f"  {pet} damaging {opposing_team.battle_pets[index]} for {damage} damage")
+                        debug(f"  {img} damaging {opposing_team.battle_pets[index]} for {damage} damage")
                         opposing_team.on_hurt(index, damage, opposing_team=self, in_battle=True)
                 
                 if target == "lowest":
                     for _ in range(count):              # dolphin
                         lowest_health_index = min(range(len(opposing_team.battle_pets)), key=lambda i: opposing_team.battle_pets[i].battle_health)
-                        debug(f"  {pet} damaging {opposing_team.battle_pets[lowest_health_index]} for {damage} damage")
+                        debug(f"  {img} damaging {opposing_team.battle_pets[lowest_health_index]} for {damage} damage")
                         opposing_team.on_hurt(lowest_health_index, damage, opposing_team=self, in_battle=True)
                 
                 if target == "last":                    # crocodile
                     last_idx = len(opposing_team.battle_pets) - 1
 
                     for _ in range(count):
-                        debug(f"  {pet} damaging {opposing_team.battle_pets[last_idx]} for {damage} damage")
+                        debug(f"  {img} damaging {opposing_team.battle_pets[last_idx]} for {damage} damage")
                         if opposing_team.on_hurt(last_idx, damage, opposing_team=self, in_battle=True):
                             last_idx -= 1
 
@@ -323,7 +328,7 @@ class Team:
                     highest_health_index = max(range(len(self.battle_pets)), key=lambda i: self.battle_pets[i].battle_health)
                     highest_health_pet = self.battle_pets[highest_health_index]
                     pet.battle_health = int(trigger["amount"] * highest_health_pet.battle_health)
-                    debug(f"  {pet} copying {highest_health_pet} for {trigger['amount']} * {highest_health_pet.battle_health} health")
+                    debug(f"  {img} copying {highest_health_pet} for {trigger['amount']} * {highest_health_pet.battle_health} health")
 
             elif effect == "buff":
                 if target == "attack":          # dodo
@@ -333,20 +338,20 @@ class Team:
                     
                     pet_ahead = self.battle_pets[idx_ahead]
                     pet_ahead.battle_attack += int(trigger["amount"] * pet.battle_attack)
-                    debug(f"  {pet} buffing {pet_ahead} for {trigger['amount']} * {pet.battle_attack} attack --> {pet_ahead.get_battle_stats()}")
+                    debug(f"  {img} buffing {pet_ahead} for {trigger['amount']} * {pet.battle_attack} attack --> {pet_ahead.get_battle_stats()}")
                 
                 if target == "all":             # armadillo
                     health_buff = trigger["amount"][1]
 
                     for other_pet in self.battle_pets:
                         other_pet.battle_health += health_buff
-                        debug(f"  {pet} buffing {other_pet} for {health_buff} health --> {other_pet.get_battle_stats()}")
+                        debug(f"  {img} buffing {other_pet} for {health_buff} health --> {other_pet.get_battle_stats()}")
                     
                     if len(opposing_team.battle_pets) == 0:
                         opposing_team.on_battle_start(self)
                     for other_pet in opposing_team.battle_pets:
                         other_pet.battle_health += health_buff
-                        debug(f"  {pet} buffing {other_pet} for {health_buff} health --> {other_pet.get_battle_stats()}")
+                        debug(f"  {img} buffing {other_pet} for {health_buff} health --> {other_pet.get_battle_stats()}")
 
             elif effect == "debuff":
                 if target == "health":          # skunk
@@ -354,7 +359,7 @@ class Team:
                     highest_health_index = max(range(len(opposing_team.battle_pets)), key=lambda i: opposing_team.battle_pets[i].battle_health)
                     highest_health_pet = opposing_team.battle_pets[highest_health_index]
 
-                    debug(f"  {pet} removing {int(amount*100):2d}% health from {highest_health_pet} @ {highest_health_pet.get_battle_stats()}")
+                    debug(f"  {img} removing {int(amount*100):2d}% health from {highest_health_pet} @ {highest_health_pet.get_battle_stats()}")
                     highest_health_pet.battle_health *= (1 - amount)
                     highest_health_pet.battle_health = max(1, int(highest_health_pet.battle_health))
 
@@ -363,7 +368,7 @@ class Team:
                     idx_ahead = idx - 1
                     if idx_ahead < 0:
                         continue
-                    debug(f"  {pet} fainting {self.battle_pets[idx_ahead]}")
+                    debug(f"  {img} fainting {self.battle_pets[idx_ahead]}")
                     pet.summon_pet = PETS.GET_PET(self.battle_pets[idx_ahead].name)
                     self.on_pet_faint(idx_ahead, opposing_team, in_battle=True)
 
@@ -386,8 +391,9 @@ class Team:
             if temp_trigger and temp_trigger["effect"] == "buff":       # ox
                 amt = temp_trigger["amount"][0]
                 perk = temp_trigger["perk"]
+                img = temp_trigger["img"]
 
-                debug(f"  {pets[0]} gaining {amt} attack and {PERK_EMOJIS[PERKS[perk]]}")
+                debug(f"  {img} gaining {amt} attack and {PERK_EMOJIS[PERKS[perk]]}")
                 pets[0].receive_buff(amt, 0, temporary=in_battle)
                 pets[0].receive_perk(perk, temporary=in_battle)
 
@@ -403,6 +409,7 @@ class Team:
 
             effect = temp_trigger["effect"]
             target = temp_trigger["target"]
+            img = temp_trigger["img"]
 
             if effect == "summon":          # fly
                 if target == "team":
@@ -425,26 +432,28 @@ class Team:
                 if target == "self":
                     attack_buff, health_buff = temp_trigger["amount"]
                     pet.receive_buff(attack_buff, health_buff, temporary=in_battle)
-                    debug(f"  {pet} buffing self w/ {(attack_buff, health_buff)} --> {pet.get_battle_stats()}")
+                    debug(f"  {img} buffing self w/ {(attack_buff, health_buff)} --> {pet.get_battle_stats()}")
 
         if trigger is None or trigger == {}:
             return
 
         effect = trigger["effect"] if "effect" in trigger else "none"
         target = trigger["target"] if "target" in trigger else "none"
-
+        img = trigger["img"]
 
         if effect == "summon":
             token = trigger["token"]          # pet to be summoned
             count = trigger["count"]
 
             if target == "team":        # summoning friend (eg. sheep, rooster, whale, etc.)
+                debug(f"  {img} fainted, summoning {count} {token}(s) @ {token.get_battle_stats()}")
                 for _ in range(count):
                     c = copy.copy(token)
                     c.prepare_battle()
                     self.add_pet(c, index, in_battle)
 
             elif target == "enemy":     # summoning enemy (eg. rat)
+                debug(f"  {img} fainted, summoning {count} {token}(s) @ {token.get_battle_stats()} on enemy team")
                 for _ in range(count):
                     c = copy.copy(token)
                     c.prepare_battle()
@@ -456,7 +465,7 @@ class Team:
             if target == "random":          # ant
                 random_idx = self.get_random_indices(1, in_battle)[0]
                 random_pet = pets[random_idx]
-                debug(f"  buffing random pet: {random_pet} w/ {(attack_buff, health_buff)}")
+                debug(f"    {img} fainted, buffing random pet: {random_pet} w/ {(attack_buff, health_buff)}")
                 random_pet.receive_buff(attack_buff, health_buff, temporary=in_battle)
             
             elif target == "2":             # flamingo
@@ -465,7 +474,7 @@ class Team:
 
                 for i in indices_buff:
                     try:
-                        debug(f"   buffing pet: {pets[i]} w/ {(attack_buff, health_buff)}")
+                        debug(f"    {img} fainted, buffing pet: {pets[i]} w/ {(attack_buff, health_buff)}")
                         pets[i].receive_buff(attack_buff, health_buff, temporary=in_battle)
                     except:
                         pass
@@ -474,7 +483,7 @@ class Team:
                 for pet in pets:
                     if not pet:
                         continue
-                    debug(f"  {fainted_pet} buffing {pet} w/ {(attack_buff, health_buff)}")
+                    debug(f"  {img} buffing {pet} w/ {(attack_buff, health_buff)}")
                     pet.receive_buff(attack_buff, health_buff, temporary=in_battle)
 
         elif effect == "perk":
@@ -486,7 +495,7 @@ class Team:
                 indices_buff = [i for i in indices_buff if i < len(pets)]
 
                 for idx in indices_buff:
-                    debug(f"  giving {pets[idx]} {PERK_EMOJIS[PERKS[perk]]}")
+                    debug(f"  {img} fainted, giving {pets[idx]} {PERK_EMOJIS[PERKS[perk]]}")
                     pets[idx].receive_perk(perk, temporary=in_battle)
 
         elif effect == "damage":
@@ -496,10 +505,10 @@ class Team:
                     ahead = index - 1
 
                     if behind < len(pets):
-                        debug(f"  damaging {pets[behind]} for {trigger['damage']} damage")
+                        debug(f"  {img} fainted, damaging {pets[behind]} for {trigger['damage']} damage")
                         self.on_hurt(behind, trigger["damage"], opposing_team, in_battle)
                     if ahead >= 0:
-                        debug(f"  damaging {pets[ahead]} for {trigger['damage']} damage")
+                        debug(f"  {img} fainted, damaging {pets[ahead]} for {trigger['damage']} damage")
                         self.on_hurt(ahead, trigger["damage"], opposing_team, in_battle)
 
                 else:                               # front of team, damaging 1 enemy
@@ -507,14 +516,14 @@ class Team:
                     ahead = 0           # enemy team
 
                     if behind < len(pets):
-                        debug(f"  damaging {pets[behind]} for {trigger['damage']} damage")
+                        debug(f"  {img} fainted, damaging {pets[behind]} for {trigger['damage']} damage")
                         self.on_hurt(behind, trigger["damage"], opposing_team, in_battle)
                     if len(opposing_team.battle_pets) > 0:
-                        debug(f"  damaging {opposing_team.battle_pets[ahead]} for {trigger['damage']} damage")
+                        debug(f"  {img} fainted, damaging {opposing_team.battle_pets[ahead]} for {trigger['damage']} damage")
                         opposing_team.on_hurt(ahead, trigger["damage"], self, in_battle)
 
             elif target == "all":               # hedgehog
-                debug(f"  damaging all pets for {trigger['amount']} damage")
+                debug(f"  {img} fainted, damaging all pets for {trigger['amount']} damage")
                 pets_range = list(range(len(pets)))
                 for i in pets_range:
                     fainted = self.on_hurt(i, trigger["amount"], opposing_team, in_battle)
@@ -553,6 +562,7 @@ class Team:
 
                 effect = trigger["effect"]
                 target = trigger["target"]
+                img = trigger["img"]
 
                 if effect == "buff":
                     attack_buff, health_buff = trigger["amount"]
@@ -560,9 +570,10 @@ class Team:
                         temporary = True if "temporary" in trigger else in_battle
 
                         friend.receive_buff(attack_buff, health_buff, temporary=temporary)
-                        debug(f"  {pet} buffing {friend} for {attack_buff, health_buff} --> {friend.get_battle_stats()}")
+                        debug(f"  {img} buffing {friend} for {attack_buff, health_buff} --> {friend.get_battle_stats()}")
                     
                     if target == "self":        # dog
+                        debug(f"  {img} buffing self for {attack_buff, health_buff}")
                         pet.receive_buff(attack_buff, health_buff, temporary=True)
 
 
@@ -582,17 +593,18 @@ class Team:
         
         effect = trigger["effect"]
         target = trigger["target"]
+        img = trigger["img"]
 
         if effect == "damage":              # blowfish
             if target == "random" and in_battle:
                 random_idx = opposing_team.get_random_indices(1, in_battle)[0]
-                debug(f"  {pet} dealing {trigger['damage']} damage to {opposing_team.battle_pets[random_idx]}")
+                debug(f"  {img} dealing {trigger['damage']} damage to {opposing_team.battle_pets[random_idx]}")
                 opposing_team.on_hurt(random_idx, trigger["damage"], opposing_team=self, in_battle=True)
 
         elif effect == "buff":
             attack_buff, health_buff = trigger["amount"]
             if target == "self":            # peacock
-                debug(f"  {pet} gaining {attack_buff} attack")
+                debug(f"  {img} gaining {attack_buff} attack")
                 pet.receive_buff(attack_buff, health_buff, temporary=in_battle)
 
             elif target == "behind":        # camel
@@ -600,11 +612,12 @@ class Team:
                 if behind_idx >= len(pets):
                     return pet_fainted
                 pet_behind = pets[behind_idx]
-                debug(f"  {pet} giving {attack_buff, health_buff} to {pet_behind}")
+                debug(f"  {img} giving {attack_buff, health_buff} to {pet_behind}")
                 pet_behind.receive_buff(attack_buff, health_buff, temporary=in_battle)
 
         elif effect == "perk":              # gorilla
             perk = int(trigger["perk"])
+            debug(f"  {img} gaining {PERK_EMOJIS[PERKS[perk]]}")
             pet.receive_perk(perk, temporary=in_battle)
 
         return pet_fainted
@@ -714,6 +727,7 @@ class Team:
 
         effect = trigger["effect"]
         target = trigger["target"]
+        img = trigger["img"]
 
         if effect == "buff":                    # hippo
             if target == "self":
@@ -722,7 +736,7 @@ class Team:
                     attack_buff *= 2
                     health_buff *= 2
 
-                debug(f"  {pet} KO'ed {victim}, gaining {attack_buff, health_buff}")
+                debug(f"  {img} KO'ed {victim}, gaining {attack_buff, health_buff}")
                 pet.receive_buff(attack_buff, health_buff, temporary=True)
         
         elif effect == "damage":                # rhino
@@ -731,7 +745,7 @@ class Team:
                 if victim.tier == 1:
                     damage *= 2
 
-                debug(f"  {pet} KO'ed {victim}, dealing {damage} damage to {opposing_team.battle_pets[0]}")
+                debug(f"  {img} KO'ed {victim}, dealing {damage} damage to {opposing_team.battle_pets[0]}")
                 got_ko = opposing_team.on_hurt(0, damage, opposing_team=self, in_battle=True)
 
                 if got_ko and len(opposing_team.battle_pets) != 0:         # check for chaining knockouts

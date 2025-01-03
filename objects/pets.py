@@ -755,7 +755,7 @@ class Parrot(Animal):
         }
     
     def on_battle_start(self):
-        # ensure copy_pet is properly set up to trigger it's abilities in battle
+        # ensure copy_pet is properly set up to trigger its abilities in battle
 
         # get fresh copy of pet (not technically necessary i think)
         self.copy_pet = GET_PET(self.copy_pet.name)
@@ -769,8 +769,13 @@ class Parrot(Animal):
     # all triggers that parrot can activate are in battle, below
 
     def on_friend_summon(self):
-        # turkey, horse - work independently
-        return self.copy_pet.on_friend_summon()
+        # turkey, horse, dog
+        trigger = self.copy_pet.on_friend_summon()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
 
     def on_faint(self):
         # so many fuckers >:(
@@ -778,9 +783,13 @@ class Parrot(Animal):
         return self.copy_pet.on_faint()
 
     def on_knockout(self):
-        # rhino - works independently
-        # hippo - need to fix
-        return self.copy_pet.on_knockout()
+        # rhino, hippo
+        trigger = self.copy_pet.on_knockout()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
 
     def on_hurt(self, other_attack: int, attacker: Animal = None):
         # peacock, camel, blowfish, gorilla
@@ -789,20 +798,48 @@ class Parrot(Animal):
 
     def before_attack(self):
         # boar
-        return self.copy_pet.before_attack()
+        trigger = self.copy_pet.before_attack()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
 
     def after_attack(self):
-        # elephant - works independently
-        return self.copy_pet.after_attack()
+        # elephant
+        trigger = self.copy_pet.after_attack()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
 
     def on_friend_ahead_attack(self):
-        return self.copy_pet.on_friend_ahead_attack()
+        # kangaroo, snake
+        trigger = self.copy_pet.on_friend_ahead_attack()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
 
     def on_friend_ahead_faints(self):
-        return self.copy_pet.on_friend_ahead_faints()
+        # ox
+        trigger = self.copy_pet.on_friend_ahead_faints()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
 
     def on_friend_faint(self):
-        return self.copy_pet.on_friend_faint()
+        # shark, fly*
+        trigger = self.copy_pet.on_friend_faint()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
 
 # TIER 5 ANIMALS
 class Scorpion(Animal):
