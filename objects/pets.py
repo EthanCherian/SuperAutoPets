@@ -789,6 +789,8 @@ class Parrot(Animal):
         # rooster's chicks need to scale off parrot's attack, handle that here
         if self.copy_pet.name == "rooster":
             trigger["token"].set_stats(int(self.battle_attack * 0.5), 1)
+        
+        trigger.update(super().on_faint())
         return trigger
 
     def on_knockout(self):
