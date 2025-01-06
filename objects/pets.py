@@ -1191,8 +1191,9 @@ class Fly(Animal):
                 "count": 1
             }
     
-    def summon_msg(self, f: Animal):
+    def fly_summon(self):
         self.summon_cnt -= 1
+        debug(f"    {self.summon_cnt} summons remaining this turn")
         # debug(f"  {self} summoning {f} @ {f.get_battle_stats()}, {self.summon_cnt} remaining")
 
 

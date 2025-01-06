@@ -419,7 +419,8 @@ class Team:
 
                     token = temp_trigger["token"]
                     try:
-                        pet.summon_msg(token)
+                        debug(f"  {img} summoning {token} @ {token.get_battle_stats()}")
+                        pet.fly_summon()
                     except:
                         pass
                     count = temp_trigger["count"]

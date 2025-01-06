@@ -100,6 +100,6 @@ def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
 #     ret = ["parrot", "sheep", "rooster", "mosquito"]
 #     return ret
 
-# # def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
-# #     ret = ["canned food"]
-# #     return ret
+# def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
+#     ret = ["canned food"]
+#     return ret
