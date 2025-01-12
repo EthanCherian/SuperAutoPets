@@ -1,6 +1,6 @@
 from objects.team import Team
 from objects.shop import Shop
-from battle import battle
+from tasks.battle import battle
 
 from utils.team_file_io import import_team, export_team
 from utils.helpers import debug, red, yellow, green, get_random_id

@@ -154,6 +154,14 @@ class Animal:
             return 2
         
         return 1                    # otherwise, level 1
+    
+    def exp_to_next_level(self):
+        curr_level = self.level()
+        if curr_level == 3:
+            return 0
+        if curr_level == 2:
+            return 5 - self.exp
+        return 2 - self.exp
 
     # events, to be handled separately by each pet
     def on_buy(self):

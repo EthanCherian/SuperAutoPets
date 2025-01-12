@@ -3,8 +3,9 @@ import os
 from typing import List
 
 from objects.animal import Animal
-from utils.constants import PERKS, PERK_EMOJIS, FOODS
-from utils.constants import PETS
+from objects.food import Food
+from utils.constants import PERKS, PERK_EMOJIS, PERK_DESC, FOODS, FOOD_DESC
+from utils.constants import PETS, PET_ABILITY_DESC
 from utils.constants import ATTACK_EMOJI, HEALTH_EMOJI
 
 flag = True
@@ -27,6 +28,9 @@ def purple(text):
 
 def blue(text):
     print(f'\033[94m {text} \033[0m')
+
+def cyan(text):
+    print(f'\033[96m{text}\033[0m')
 
 def info(a: Animal, battle=False):
     temp = a.get_info(battle=battle)
@@ -93,6 +97,42 @@ def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
         ret.append(random.choice(food_names))
     
     return ret
+
+def get_pet_info(pet: Animal, specific: bool = False):
+    # get info about pet, ie. tier, stats, and ability
+    # if specific is True (request came from shop), get additional info about the arg pet instance
+    pet_name = pet.name
+    info = ""
+
+    # get generic info
+    info += f"{pet_name} || Icon: {str(pet)} || Tier {pet.tier} || {ATTACK_EMOJI}: {pet.attack} || {HEALTH_EMOJI}: {pet.health} || Perk: {PERK_EMOJIS[PERKS[pet.perk]]} : {PERK_DESC[PERKS[pet.perk]]}\n"
+    info += f"\tAbility: {PET_ABILITY_DESC[pet_name]}\n"
+
+    # get specific info
+    if specific:
+        exp_next_lvl = pet.exp_to_next_level()
+        info += f"\tLevel: {pet.level()} || Exp To Next Level: {exp_next_lvl if exp_next_lvl > 0 else 'Max Level'}"
+        temp_atk_buff = pet.battle_attack - pet.attack
+        temp_health_buff = pet.battle_health - pet.health
+        if temp_atk_buff != 0 or temp_health_buff != 0:
+            info += f" || Temporary Buffs: {(temp_atk_buff, temp_health_buff)}"
+
+    return info
+
+def get_food_info(food: Food):
+    # get info about food: effect, tier, perk/token status, etc.
+    food_name = food.name
+    info = ""
+
+    info += f"{food_name} || Icon: {str(food)} || Tier {food.tier}"
+    if not food.is_perk():
+        info += f" || Boost: ({food.att_buff} {ATTACK_EMOJI}, {food.hp_buff} {HEALTH_EMOJI})\n"
+    else:
+        info += f" || Perk\n"
+    
+    info += f"\tEffect: {FOOD_DESC[food_name]}\n"
+    
+    return info
 
 # these two were used for testing pets/foods
 

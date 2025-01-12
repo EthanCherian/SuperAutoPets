@@ -890,3 +890,126 @@ if not USE_EMOJI:
     ATTACK_EMOJI = "attack"
     HEALTH_EMOJI = "health"
     SPECIAL_EMOJI = "SPECIAL"
+
+PET_ABILITY_DESC = {
+    "ant": f"Faint: Give a random friend [+1/+1 > +2/+2 > +3/+3].",
+    "beaver": f"Sell: Give two random friends [+1 > +2 > +3] {ATTACK_EMOJI}.",
+    "cricket": f"Faint: Summon a [1/1 > 2/2 > 3/3] Zombie Cricket.",
+    "duck": f"Sell: Give shop pets [+1 > +2 > +3] {HEALTH_EMOJI}.",
+    "fish": f"Level up: Give two random friends [+1/+1 > +2/+2].",
+    "horse": f"Friend summoned: Give it [+1 > +2 > +3] {ATTACK_EMOJI} until the end of battle.",
+    "mosquito": f"Start of battle: Deal 1 damage to [1 > 2 > 3] random enemies.",
+    "otter": f"Buy: Give [1 > 2 > 3] random friends +1 {HEALTH_EMOJI}.",
+    "pig": f"Sell: Gain [+1 > +2 > +3] {GOLD_EMOJI}.",
+    "pigeon": f"Sell: Stock [1 > 2 > 3] free Bread Crumbs that give +1 {ATTACK_EMOJI}.",
+
+    "crab": f"Start of battle: Copy [50% > 100% > 150%] of {HEALTH_EMOJI} from most healthy friend.",
+    "flamingo": f"Faint: Give two friends behind [+1/+1 > +2/+2 > +3/+3].",
+    "hedgehog": f"Faint: Deal [2 > 4 > 6] damage to ALL pets.",
+    "kangaroo": f"Friend ahead attacks: Gain [+1/+1 > +2/+2 > +3/+3].",
+    "peacock": f"Hurt: Gain [+4 > +8 > +12] {ATTACK_EMOJI}.",
+    "rat": f"Faint: Summon [one > two > three] 1/1 Dirty Rat(s) up front for the opponent.",
+    "snail": f"End of turn: If you lost last battle, give friends [+1 > +2 > +3] {HEALTH_EMOJI}.",
+    "spider": f"Faint: Summon a [level 1 > level 2 > level 3] tier 3 pet at [2/2 > 4/4 > 6/6].",
+    "swan": f"Start of turn: Gain [+1 > +2 > +3] {GOLD_EMOJI}.",
+    "worm": f"Start of turn: Stock one 2-gold [Apple > Better Apple > Best Apple] that gives a pet [+1/+1 > +2/+2 > +3/+3].",
+
+    "dodo": f"Start of battle: Give [50% > 100% > 150%] of {ATTACK_EMOJI} to nearest friend ahead.",
+    "badger": f"Faint: Deal [50% > 100% > 150%] of {ATTACK_EMOJI} damage to adjacent pets.",
+    "dolphin": f"Start of battle: Deal 4 damage to lowest health enemy. Triggers [1 > 2 > 3] times.",
+    "giraffe": f"End of turn: Give nearest [1 > 2 > 3] pets ahead +1/+1.",
+    "elephant": f"After attack: Deal 1 damage to nearest friend behind. Triggers [1 > 2 > 3] times.",
+    "camel": f"Hurt: Give nearest friend behind [+1/+2 > +2/+4 > +3/+6].",
+    "rabbit": f"Friend eats food: Give them [+1 > +2 > +3] {HEALTH_EMOJI}.",
+    "ox": f"Friend ahead faints: Gain Melon perk and +1 {ATTACK_EMOJI}. Works [1 > 2 > 3] times per turn.",
+    "dog": f"Friend summoned: Gain [+2/+1 > +4/+2 > +6/+3] until end of battle.",
+    "sheep": f"Faint: Summon two [2/2 > 4/4 > 6/6] Rams.",
+
+    "skunk": f"Start of battle: Reduce highest health enemy by [33% > 66% > 99%] {HEALTH_EMOJI}.",
+    "hippo": f"Knock out: Gain [+2/+2 > +4/+4 > +6/+6]. Gain double against Tier 4 pets or higher.",
+    "bison": f"End of turn: If level 3 friend on team, gain [+1/+2 > +2/+4 > +3/+6].",
+    "blowfish": f"Hurt: Deal [3 > 6 > 9] damage to one random enemy.",
+    "turtle": f"Faint: Give Melon perk to nearest [1 > 2 > 3] friends behind.",
+    "squirrel": f"Start of turn: Discount all shop food by [1 > 2 > 3] {GOLD_EMOJI}.",
+    "penguin": f"End of turn: give two level 2 and level 3 friends [+1/+1 > +2/+2 > +3/+3].",
+    "deer": f"Faint: Summon one [5/5 > 10/10 > 15/15] Bus with Chili perk.",
+    "whale": f"Start of battle: Swallow nearest friend ahead and summon a new level [1 > 2 > 3] after fainting.",
+    "parrot": f"End of turn: Copy ability from nearest pet ahead as level [1 > 2 > 3] until end of battle.",
+
+    "scorpion": f"Summoned: Gain Peanut perk: Knock out any pet attacked and hurt by this.",
+    "crocodile": f"Start of battle: Deal 8 damage to the last enemy. Triggers [1 > 2 > 3] times.",
+    "rhino": f"Knock out: Deal [4 > 8 > 12] damage to the first enemy. Double against Tier 1 pets.",
+    "monkey": f"End of turn: Give front-most friend [+2/+3 > +4/+6 > +6/+9].",
+    "armadillo": f"Start of battle: Give ALL pets [+8 > +16 > +24] {HEALTH_EMOJI}.",
+    "cow": f"Buy: Replace shop food with 2 free [Milk > Better Milk > Best Milk] that give [+1/+2 > +2/+4 > +3/+6].",
+    "seal": f"Eats food: Give three random friends [+1 > +2 > +3] {ATTACK_EMOJI}.",
+    "rooster": f"Faint: Summon [1 > 2 > 3] Chick(s) with 1 {HEALTH_EMOJI} and 50% the {ATTACK_EMOJI} of this.",
+    "shark": f"Friend faints: Gain [+2/+2 > +4/+4 > +6/+6].",
+    "turkey": f"Friend summoned: Give it [+3/+2 > +6/+4 > +9/+6].",
+    
+    "leopard": f"Start of battle: Deal 50% attack damage to [1 > 2 > 3] random enemy(ies).",
+    "boar": f"Before attack: Gain [+4/+2 > +8/+4 > +12/+6].",
+    "tiger": f"!!WIP!! Friend ahead repeats their ability in battle as if they were level [1 > 2 > 3].",
+    "wolverine": f"!!WIP!! Adjacent friend abilities deal [3 > 6 > 9] extra damage.",
+    "gorilla": f"Hurt: Gain Coconut perk: Block all damage, once. Works [1 > 2 > 3] times per turn.",
+    "dragon": f"Tier 1 friend bought: Give friends [+1/+1 > +2/+2 > +3/+3].",
+    "mammoth": f"Faint: Give all friends [+2/+2 > +4/+4 > +6/+6].",
+    "cat": f"Food gives [double > triple > quadruple] health and attack. Works twice per turn.",
+    "snake": f"Friend ahead attacks: Deal [5 > 10 > 15] damage to one random enemy.",
+    "fly": f"Friend faints: Summon one [4/4 > 8/8 > 12/12] Zombie Fly in its place. Works 3 times per turn.",
+
+    "zombie cricket": "No ability.",
+    "dirty rat": "No ability.",
+    "ram": "No ability.",
+    "bus": "No ability.",
+    "chick": "No ability.",
+    "zombie fly": "No ability.",
+    "bee": "No ability.",
+}
+
+FOOD_DESC = {
+    "apple": f"Give a pet +1/+1.",
+    "honey": f"Give a pet the Honey perk: Summon a 1/1 Bee after fainting.",
+
+    "sleeping pill": f"Make a pet faint. Always on sale for 1 {GOLD_EMOJI}.",
+    "meat bone": f"Give one pet the Meat perk: Attacks for 3 extra damage.",
+    "cupcake": f"Give one pet +3/+3 until the end of battle.",
+    
+    "salad": f"Give two random pets +1/+1.",
+    "garlic": f"Give one pet the Garlic perk: Take 2 less damage.",
+    
+    "canned food": f"Give all current and future shop pets +1/+1.",
+    "pear": f"Give one pet +2/+2.",
+    
+    "chili": f"Give one pet the Chili perk: Attack second enemy for 5 damage.",
+    "chocolate": f"Give one pet 1 experience.",
+    "sushi": f"Give three random pets +1/+1.",
+    
+    "steak": f"Give one pet the Steak perk: Attack for 20 more damage, once.",
+    "melon": f"Give one pet the Melon perk: Take 20 less damage, once.",
+    "mushroom": f"Give one pet the Mushroom perk: Come back as a 1/1 after fainting.",
+    "pizza": f"Give two random pets +2/+2.",
+
+    "bread crumbs": f"Give a pet +1 {ATTACK_EMOJI}.",
+    "better apple": f"Give a pet +2/+2.",
+    "best apple": f"Give a pet +3/+3.",
+    "milk": f"Give a pet +1/+2.",
+    "better milk": f"Give a pet +2/+4.",
+    "best milk": f"Give a pet +3/+6.",
+}
+
+PERK_DESC = {
+    "none": "No perk.",
+    "honey": "Summon a 1/1 Bee after fainting.",
+    "sleeping pill": "This pet is dead :)",
+    "meat bone": "Attack for 3 extra damage.",
+    "garlic": "Take 2 less damage.",
+    "chili": "Attack second enemy for 5 damage.",
+    "chocolate": "This pet is more alive than ever :)",
+    "melon": "Take 20 less damage, once.",
+    "mushroom": "Come back as a 1/1 after fainting.",
+    "steak": "Attack for 20 more damage, once.",
+
+    "peanut": "Knock out any pet attacked and hurt by this.",
+    "coconut": "Block all damage, once."
+}

@@ -322,7 +322,7 @@ class Spider(Animal):
 
         l = self.level() - 1
         name = get_random_pet_from_tiers([3])[0]
-        token = copy.copy(CREATE_PET[name])
+        token = copy.copy(PET_MAP[name])
         token.set_stats(self.tkn_attack[l], self.tkn_health[l])
         token.set_level(self.tkn_level[l])
 
@@ -1200,7 +1200,7 @@ class Fly(Animal):
 # ----------------------------------------------------------
 
 # map from pet name to pet object
-CREATE_PET: Dict[str, Animal] = {
+PET_MAP: Dict[str, Animal] = {
     "bee": Animal("bee"),
     "zombie cricket": Animal("zombie cricket"),
     "dirty rat": Animal("dirty rat"),
@@ -1278,4 +1278,4 @@ CREATE_PET: Dict[str, Animal] = {
 
 def GET_PET(name: str) -> Animal:
     # get a clean copy of the pet object matching name
-    return copy.copy(CREATE_PET[name])
+    return copy.copy(PET_MAP[name])

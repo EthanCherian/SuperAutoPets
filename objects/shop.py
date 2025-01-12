@@ -2,7 +2,8 @@ import math
 from typing import List
 
 from utils.helpers import get_random_pet_from_tiers, get_random_food_from_tiers
-from utils.helpers import debug, red, yellow, green, blue, purple, shop_exp_display
+from utils.helpers import get_food_info, get_pet_info
+from utils.helpers import debug, red, yellow, green, blue, purple, cyan, shop_exp_display
 from utils.constants import GOLD_EMOJI, FREEZE_EMOJI, SPECIAL_EMOJI
 from objects.pets import GET_PET
 from objects.food import GET_FOOD, Food
@@ -18,7 +19,9 @@ class Shop:
         "freeze pet": 5,
         "freeze food": 6,
         "roll shop": 7,
-        "end turn": 8
+        "team info": 8,
+        "shop info": 9,
+        "end turn": 0
     }
 
     TURN = -1
@@ -244,7 +247,9 @@ class Shop:
             purple(f"   [{self.USER_OPTIONS['freeze pet']}]  Freeze/unfreeze pet")
             purple(f"   [{self.USER_OPTIONS['freeze food']}]  Freeze/unfreeze food\n")
 
-            purple(f"   [{self.USER_OPTIONS['roll shop']}]  Roll shop")
+            purple(f"   [{self.USER_OPTIONS['roll shop']}]  Roll shop\n")
+            purple(f"   [{self.USER_OPTIONS['team info']}]  Info on your team")
+            purple(f"   [{self.USER_OPTIONS['shop info']}]  Info on the shop\n")
             purple(f"   [{self.USER_OPTIONS['end turn']}]  End turn")
 
             user_input = input("\nWhat do you want to do? ")
@@ -252,7 +257,7 @@ class Shop:
 
             try:
                 user_input = int(user_input)
-                if user_input < 1 or user_input > 9:
+                if user_input < 0 or user_input > 9:
                     raise ValueError
             except:
                 yellow("Invalid input")
@@ -282,6 +287,12 @@ class Shop:
                 else:
                     yellow("Not enough gold")
                     continue
+            
+            if user_input == self.USER_OPTIONS["team info"]:
+                self.team_info()
+
+            if user_input == self.USER_OPTIONS["shop info"]:
+                self.shop_info()
 
             if user_input == self.USER_OPTIONS["end turn"]:
                 purple("Ending turn...")
@@ -577,3 +588,31 @@ class Shop:
 
         self.pets.append(new_pet)
 
+    def team_info(self):
+        # get index of pet to get info on
+        pet_idx = input("Which pet do you want to get info on? Enter the index (1-5), or 0 for entire team: ")
+        try:
+            pet_idx = int(pet_idx)
+            if pet_idx < 0 or pet_idx > 5:
+                raise ValueError
+        except:
+            yellow("Invalid input")
+            return
+        
+        # get relevant info
+        info = ""
+        if pet_idx == 0:
+            # for entire team
+            for pet in self.team.pets:
+                if pet is None:
+                    continue
+                info += get_pet_info(pet, specific=True) + "\n"
+        else:
+            # for single pet
+            info = get_pet_info(self.team.pets[pet_idx - 1], specific=True)
+        
+        cyan(info)
+        input("Press \'Enter\' to continue...")
+
+    def shop_info(self):
+        pass
