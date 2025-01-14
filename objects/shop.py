@@ -590,6 +590,10 @@ class Shop:
 
     def team_info(self):
         # get index of pet to get info on
+        if len(self.team.pets) < 1:
+            yellow("No pets in team")
+            return
+        
         pet_idx = input("Which pet do you want to get info on? Enter the index (1-5), or 0 for entire team: ")
         try:
             pet_idx = int(pet_idx)
@@ -615,4 +619,58 @@ class Shop:
         input("Press \'Enter\' to continue...")
 
     def shop_info(self):
-        pass
+        # determine which side of shop to get info on
+        shop_side = input("Would you like to get info on food or pets? (f/p): ").lower()
+        if shop_side not in ["f", "p"]:
+            yellow("Invalid input")
+            return
+        
+        info = ""
+        if shop_side == "f":
+            if len(self.foods ) < 1:
+                yellow("No pets in shop")
+                return
+            # get info on food
+            food_idx = input("Which food do you want to get info on? Enter the index, or 0 for entire stock: ")
+            try:
+                food_idx = int(food_idx)
+                if food_idx < 0 or food_idx > len(self.foods):
+                    raise ValueError
+            except:
+                yellow("Invalid input")
+                return
+            
+            if food_idx == 0:
+                # for entire stock
+                for food in self.foods:
+                    info += get_food_info(food) + "\n"
+            else:
+                # for single food
+                info = get_food_info(self.foods[food_idx - 1])
+        
+        elif shop_side == "p":
+            if len(self.pets) < 1:
+                yellow("No pets in shop")
+                return
+            # get info on pets
+            pet_idx = input("Which pet do you want to get info on? Enter the index, or 0 for entire stock: ")
+            try:
+                pet_idx = int(pet_idx)
+                if pet_idx < 0 or pet_idx > len(self.pets):
+                    raise ValueError
+            except:
+                yellow("Invalid input")
+                return
+            
+            if pet_idx == 0:
+                # for entire stock
+                for pet in self.pets:
+                    if pet is None:
+                        continue
+                    info += get_pet_info(pet) + "\n"
+            else:
+                # for single pet
+                info = get_pet_info(self.pets[pet_idx - 1])
+
+        cyan(info)
+        input("Press \'Enter\' to continue...")

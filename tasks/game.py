@@ -36,6 +36,7 @@ class Game:
                 continue
             winner = battle(self.TEAM, temp_team)
             self.handle_winner(winner)
+            input("Press \'Enter\' to continue...")
             # uncomment this line if skipping battle phase
             # self.TEAM.reset()           # TODO: remove this when testing is over
 
