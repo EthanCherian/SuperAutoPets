@@ -57,7 +57,9 @@ class Info:
     
     def display(self):
         while True:
-            info_side = input("Would you like to get info on food or pets? (f/p): ").lower()
+            info_side = input("Would you like to get info on food or pets? (f/p, or \'quit\' to exit): ").lower()
+            if info_side == "quit":
+                break
             if info_side not in ["f", "p"]:
                 yellow("Invalid input")
                 continue
@@ -78,6 +80,6 @@ class Info:
                 yellow("Invalid input")
                 continue
 
-            quit = input("Press \'Enter\' to continue or \'quit\' to exit... ").lower()
-            if quit == "quit":
-                break
+            input("Press \'Enter\' to continue...")
+        
+        blue("Exiting info mode...")
