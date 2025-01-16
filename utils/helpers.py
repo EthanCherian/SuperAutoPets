@@ -27,7 +27,7 @@ def purple(text):
     print(f'\033[95m{text}\033[0m')
 
 def blue(text):
-    print(f'\033[94m {text} \033[0m')
+    print(f'\033[94m{text}\033[0m')
 
 def cyan(text):
     print(f'\033[96m{text}\033[0m')
