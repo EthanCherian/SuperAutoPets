@@ -101,22 +101,47 @@ class Shop:
         self.initialize()
 
     def set_animals(self):
+        # get rid of any excess pets beyond slot limits
+        if len(self.pets) > self.NUM_ANIMAL_SLOTS:
+            self.pets = self.pets[:self.NUM_ANIMAL_SLOTS]
+
+        # move frozen pets to front
+        counter = 0
+        for i, fp in enumerate(self.frozen_pets):
+            self.pets[counter] = self.pets[fp]
+            self.frozen_pets[i] = counter
+            counter += 1
+
+        
         new_pets = get_random_pet_from_tiers(range(1, self.HIGHEST_TIER_PET + 1), self.NUM_ANIMAL_SLOTS)
         new_pets = [GET_PET(pet) for pet in new_pets]
         for pet in new_pets:
             # apply shop buffs from any previously purchased cans
             pet.receive_buff(self.SHOP_BUFFS, self.SHOP_BUFFS)
 
-        for i in range(len(new_pets)):
-            if i not in self.frozen_pets:
-                if i > len(self.pets) - 1:
-                    self.pets.insert(i, new_pets[i])
-                else:
-                    self.pets[i] = new_pets[i]
+        num_frozen_pets = len(self.frozen_pets)
+        # cut new pets to fit in unfrozen slots
+        new_pets = new_pets[:self.NUM_ANIMAL_SLOTS - num_frozen_pets]
+        for i, new_pet in enumerate(new_pets):
+            if i + num_frozen_pets > len(self.pets) - 1:
+                self.pets.insert(i + num_frozen_pets, new_pet)
+            else:
+                self.pets[i + num_frozen_pets] = new_pet
 
         return self.pets
 
     def set_foods(self):
+        # get rid of any excess foods beyond slot limits
+        if len(self.foods) > self.NUM_FOOD_SLOTS:
+            self.foods = self.foods[:self.NUM_FOOD_SLOTS]
+        
+        # move frozen foods to front
+        counter = 0
+        for i, ff in enumerate(self.frozen_foods):
+            self.foods[counter] = self.foods[ff]
+            self.frozen_foods[i] = counter
+            counter += 1
+
         new_foods = get_random_food_from_tiers(range(1, self.HIGHEST_TIER_PET + 1), self.NUM_FOOD_SLOTS)
         new_foods = [GET_FOOD(food) for food in new_foods]
 
@@ -164,26 +189,13 @@ class Shop:
                 yellow(f"{index} not frozen")
 
     def roll(self):
-        purple("Rolling shop...")
+        if self.gold >= 1:
+            self.gold -= 1
+        else:
+            yellow("Not enough gold")
+            return
         
-        # get rid of any excess pets/foods beyond slot limits
-        if len(self.pets) > self.NUM_ANIMAL_SLOTS:
-            self.pets = self.pets[:self.NUM_ANIMAL_SLOTS]
-        if len(self.foods) > self.NUM_FOOD_SLOTS:
-            self.foods = self.foods[:self.NUM_FOOD_SLOTS]
-
-        # move frozen pets/foods to front
-        counter = 0
-        for i, fp in enumerate(self.frozen_pets):
-            self.pets[counter] = self.pets[fp]
-            self.frozen_pets[i] = counter
-            counter += 1
-
-        counter = 0
-        for i, ff in enumerate(self.frozen_foods):
-            self.foods[counter] = self.foods[ff]
-            self.frozen_foods[i] = counter
-            counter += 1
+        purple("Rolling shop...")
 
         self.set_animals()
         self.set_foods()
@@ -281,12 +293,7 @@ class Shop:
                 self.freeze_food()
 
             if user_input == self.USER_OPTIONS["roll shop"]:
-                if self.gold >= 1:
-                    self.gold -= 1
-                    self.roll()
-                else:
-                    yellow("Not enough gold")
-                    continue
+                self.roll()
             
             if user_input == self.USER_OPTIONS["team info"]:
                 self.team_info()
@@ -300,6 +307,8 @@ class Shop:
                 end = self.end_turn()
                 if end:
                     break
+            
+            input("Press \'Enter\' to continue...")
 
     def buy_pet(self):
         if self.gold < 3:
@@ -616,7 +625,6 @@ class Shop:
             info = get_pet_info(self.team.pets[pet_idx - 1], specific=True)
         
         cyan(info)
-        input("Press \'Enter\' to continue...")
 
     def shop_info(self):
         # determine which side of shop to get info on
@@ -673,4 +681,3 @@ class Shop:
                 info = get_pet_info(self.pets[pet_idx - 1])
 
         cyan(info)
-        input("Press \'Enter\' to continue...")

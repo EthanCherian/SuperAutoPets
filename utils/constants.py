@@ -145,6 +145,15 @@ PETS = [
         "health": 4,
         "token": True
     },
+    {
+        "name": "sloth",
+        "tier": 1,
+        "exp": 0,
+        "perk": 0,
+        "attack": 1,
+        "health": 1,
+        "token": True
+    },
 
     # TIER 2 ANIMALS
     {
@@ -580,6 +589,7 @@ PET_EMOJIS = {
     "bus": "🚌",
     "chick": "🐤",
     "zombie fly": "🐽",
+    "sloth": "🦥",
 
     "crab": "🦀",
     "flamingo": "🦩",
@@ -965,6 +975,7 @@ PET_ABILITY_DESC = {
     "chick": "No ability.",
     "zombie fly": "No ability.",
     "bee": "No ability.",
+    "sloth": "No ability. Kind of lame combat-wise. But he truly believes in you!"
 }
 
 FOOD_DESC = {

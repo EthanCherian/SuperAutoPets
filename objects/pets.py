@@ -755,7 +755,12 @@ class Parrot(Animal):
         self.copy_pet.set_level(self.copy_lvl[l])
 
         # trigger copy_pet's battle_start ability (if any)
-        return self.copy_pet.on_battle_start()
+        trigger = self.copy_pet.on_battle_start()
+        if trigger is None:
+            return
+
+        trigger["img"] = str(self)
+        return trigger
     
     # all triggers that parrot can activate are in battle, below
 
@@ -1208,6 +1213,7 @@ PET_MAP: Dict[str, Animal] = {
     "bus": Animal("bus"),
     "chick": Animal("chick"),
     "zombie fly": Animal("zombie fly"),
+    "sloth": Animal("sloth"),
     
     "cricket": Cricket(),
     "fish": Fish(),

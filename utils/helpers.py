@@ -86,6 +86,10 @@ def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
     for _ in range(count):
         ret.append(random.choice(pet_names))
     
+    # 1 in 10,000 of leftmost pet being sloth
+    if random.randint(1, 10000) == 1:
+        ret[0] = "sloth"
+    
     return ret
 
 def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
