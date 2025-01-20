@@ -261,3 +261,6 @@ class Animal:
 
     def on_friend_buy(self, friend: Animal):
         pass
+
+    def on_friend_ability(self):
+        pass

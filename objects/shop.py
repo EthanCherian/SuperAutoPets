@@ -111,8 +111,7 @@ class Shop:
             self.pets[counter] = self.pets[fp]
             self.frozen_pets[i] = counter
             counter += 1
-
-        
+    
         new_pets = get_random_pet_from_tiers(range(1, self.HIGHEST_TIER_PET + 1), self.NUM_ANIMAL_SLOTS)
         new_pets = [GET_PET(pet) for pet in new_pets]
         for pet in new_pets:
@@ -259,7 +258,7 @@ class Shop:
             purple(f"   [{self.USER_OPTIONS['freeze pet']}]  Freeze/unfreeze pet")
             purple(f"   [{self.USER_OPTIONS['freeze food']}]  Freeze/unfreeze food\n")
 
-            purple(f"   [{self.USER_OPTIONS['roll shop']}]  Roll shop\n")
+            purple(f"   [{self.USER_OPTIONS['roll shop']}]  Roll shop (Costs 1 {GOLD_EMOJI})\n")
             purple(f"   [{self.USER_OPTIONS['team info']}]  Info on your team")
             purple(f"   [{self.USER_OPTIONS['shop info']}]  Info on the shop\n")
             purple(f"   [{self.USER_OPTIONS['end turn']}]  End turn")

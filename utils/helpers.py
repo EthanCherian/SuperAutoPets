@@ -41,12 +41,12 @@ def info(a: Animal, battle=False):
     print(f'\033[96m {a} || level: {level} || {ATTACK_EMOJI}: {attack:2g} || {HEALTH_EMOJI}: {health:2g} || perk: {perk} \033[00m')
 
 EXP_BAR = {
-    0: "",
-    1: "½",
-    2: "",
-    3: "⅓",
-    4: "⅔",
-    5: ""
+    0: "{__}",
+    1: "{+_}",
+    2: "{___}",
+    3: "{+__}",
+    4: "{++_}",
+    5: "{+++}"
 }
 
 def shop_exp_display(a: Animal):
