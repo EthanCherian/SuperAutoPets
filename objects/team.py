@@ -586,10 +586,11 @@ class Team:
         pets = self.battle_pets if in_battle else self.pets
         pet = pets[index]
         trigger = pet.on_hurt(damage, attacker)
+        pet.battle_health -= trigger["damage"]
         if pet.battle_health <= 0:
             self.on_pet_faint(index, opposing_team, in_battle)
             pet_fainted = True
-        if not trigger:
+        if "effect" not in trigger:
             return pet_fainted
         
         effect = trigger["effect"]

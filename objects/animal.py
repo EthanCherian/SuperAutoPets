@@ -236,7 +236,10 @@ class Animal:
             dmg = 100               # insta-kill
             print(f"{self} is knocked out by {attacker}'s {PERK_EMOJIS[PERKS[other_perk]]} !")
         
-        self.battle_health -= dmg
+        # comment this line out, so works same as all other abilities
+        # does nothing itself, but sends a message up the chain (to team) to be handled
+        # self.battle_health -= dmg
+        return { "damage": dmg }
     
     def before_attack(self):
         pass

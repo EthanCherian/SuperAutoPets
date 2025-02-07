@@ -259,18 +259,16 @@ class Peacock(Animal):
     
     def on_hurt(self, other_attack: int, attacker: Animal = None):
         l = self.level() - 1
-        curr_health = self.battle_health
-        super().on_hurt(other_attack, attacker)
-        new_health = self.battle_health
+        ret = super().on_hurt(other_attack, attacker)
+        
+        if ret["damage"] > 0:       # actually took damage
+            ret.update({
+                    "img": str(self),
+                    "effect": "buff",
+                    "target": "self",
+                    "amount": (self.attack_buff[l], 0)
+                })
 
-        ret = None
-        if new_health != curr_health:       # actually got hurt
-            ret = {
-                "img": str(self),
-                "effect": "buff",
-                "target": "self",
-                "amount": (self.attack_buff[l], 0)
-            }
         return ret
 
 class Rat(Animal):
@@ -457,18 +455,15 @@ class Camel(Animal):
     
     def on_hurt(self, other_attack: int, attacker: Animal = None):
         l = self.level() - 1
-        curr_health = self.battle_health
-        super().on_hurt(other_attack, attacker)
-        new_health = self.battle_health
 
-        ret = None
-        if new_health != curr_health:       # actually got hurt
-            ret = {
+        ret = super().on_hurt(other_attack, attacker)
+        if ret["damage"] > 0:
+            ret.update({
                 "img": str(self),
                 "effect": "buff",
                 "target": "behind",
                 "amount": (self.attack_buff[l], self.health_buff[l])
-            }
+            })
         return ret
 
 class Rabbit(Animal):
@@ -602,18 +597,15 @@ class Blowfish(Animal):
 
     def on_hurt(self, other_attack: int, attacker: Animal = None):
         l = self.level() - 1
-        curr_health = self.battle_health
-        super().on_hurt(other_attack, attacker)
-        new_health = self.battle_health
 
-        ret = None
-        if curr_health != new_health:
-            ret = {
+        ret = super().on_hurt(other_attack, attacker)
+        if ret["damage"] > 0:
+            ret.update({
                 "img": str(self),
                 "effect": "damage",
                 "target": "random",
                 "damage": self.damage[l]
-            }
+            })
         return ret
 
 class Turtle(Animal):
@@ -800,18 +792,17 @@ class Parrot(Animal):
 
     def on_hurt(self, other_attack: int, attacker: Animal = None):
         # peacock, camel, blowfish, gorilla
-        curr_health = self.battle_health
-        super().on_hurt(other_attack, attacker)
-        new_health = self.battle_health
+        ret = super().on_hurt(other_attack, attacker)
         trigger = self.copy_pet.on_hurt(other_attack, attacker)
-        if trigger is None:
-            return
+        if "effect" not in trigger:
+            return ret
+        trigger.update(ret)
 
-        if new_health != curr_health:
+        if trigger["damage"] > 0:
             trigger["img"] = str(self)
             return trigger
 
-        return
+        return ret
 
     def before_attack(self):
         # boar
@@ -1080,20 +1071,19 @@ class Gorilla(Animal):
         super().reset()
 
     def on_hurt(self, other_attack: int, attacker: Animal = None):
-        curr_health = self.battle_health
-        super().on_hurt(other_attack, attacker)
-        if self.battle_health >= curr_health:
-            return
-        
         l = self.level() - 1
-        if self.curr_cnt < self.perk_cnt[l]:
+        ret = super().on_hurt(other_attack, attacker)
+        
+        if self.curr_cnt < self.perk_cnt[l] and ret["damage"] > 0:
             self.curr_cnt += 1
-            return {
+            ret.update({
                 "img": str(self),
                 "effect": "perk",
                 "target": "self",
                 "perk": 11
-            }
+            })
+        
+        return ret
 
 class Dragon(Animal):
     atk_buff = [1, 2, 3]
