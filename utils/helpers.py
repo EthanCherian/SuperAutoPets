@@ -58,16 +58,13 @@ def shop_exp_display(a: Animal):
 
 # ----------------------------------------
 
-def get_random_id(exclude_id: int = None):
+def get_random_id(exclude_id: int, turn: int):
     # get a random valid team id, excluding the one passed in
-    file_names = [file for file in os.listdir('data') if file.startswith('team_') and file.endswith('.csv')]
-    selected_file = None
-    while True:
-        selected_file = random.choice(file_names)
-        if selected_file != f'team_{exclude_id}.csv':
-            break
-
-    return int(selected_file.split('_')[1].split('.')[0])
+    team_ids = get_teams_with_turn(turn)
+    if exclude_id != -1:        # team is being exported --> exclude its id
+        team_ids.remove(exclude_id)
+        
+    return random.choice(team_ids)
 
 def get_next_id():
     # get the next sequential team id to which a new team may be saved
@@ -77,6 +74,24 @@ def get_next_id():
     if len(file_ids) == 0:
         return 1
     return max(file_ids) + 1
+
+def get_teams_with_turn(turn: int):
+    # get team ids that have the arg turn number
+    file_names = [file for file in os.listdir('data') if file.startswith('team_') and file.endswith('.csv')]
+    team_ids = []
+    for file_name in file_names:
+        with open(f'data/{file_name}', 'r') as f:
+            for i, line in enumerate(f):
+                if i == 0: continue         # skip header
+                line = line.strip().split(',')
+
+                if int(line[0]) < turn: continue        # skip up to arg turn
+                if int(line[0]) == turn:
+                    # append team id if turn is reached
+                    team_ids.append(int(file_name.split('_')[1].split('.')[0]))
+                    break
+
+    return team_ids
 
 def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
     # get count random pets from tiers
