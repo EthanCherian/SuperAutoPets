@@ -892,6 +892,7 @@ FREEZE_EMOJI = "🧊"
 ATTACK_EMOJI = "👊"
 HEALTH_EMOJI = "💖"
 SPECIAL_EMOJI = "✨"
+LINK_EMOJI = "🔗"
 
 USE_EMOJI = input("Use emojis? (y/n) ").lower() == "y"
 if not USE_EMOJI:
@@ -900,6 +901,7 @@ if not USE_EMOJI:
     ATTACK_EMOJI = "attack"
     HEALTH_EMOJI = "health"
     SPECIAL_EMOJI = "SPECIAL"
+    LINK_EMOJI = "LINK"
 
 PET_ABILITY_DESC = {
     "ant": f"Faint: Give a random friend [+1/+1 > +2/+2 > +3/+3].",

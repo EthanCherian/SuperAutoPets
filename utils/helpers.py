@@ -1,6 +1,6 @@
 import random
 import os
-from typing import List
+from typing import List, Tuple
 
 from objects.animal import Animal
 from objects.food import Food
@@ -107,6 +107,12 @@ def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
     
     return ret
 
+def get_upgrade_pet_pair(tier: int) -> Tuple[str, str]:
+    # get a pair of pets from given tier, to be offered as a pair when pet is upgraded
+    pets_in_tier = [pet for pet in PETS if pet["tier"] == tier]
+    pet_names = [pet["name"] for pet in pets_in_tier]
+    return random.sample(pet_names, 2)
+
 def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
     # get count random foods from tiers
     ret = []
@@ -155,9 +161,9 @@ def get_food_info(food: Food):
 
 # these two were used for testing pets/foods
 
-# def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
-#     ret = ["parrot", "sheep", "rooster", "mosquito"]
-#     return ret
+def get_random_pet_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
+    ret = ["ant", "ant", "ant"]
+    return ret
 
 # def get_random_food_from_tiers(tiers: List[int], count: int = 1) -> List[str]:
 #     ret = ["canned food"]

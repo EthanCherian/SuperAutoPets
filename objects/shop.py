@@ -1,10 +1,10 @@
 import math
 from typing import List
 
-from utils.helpers import get_random_pet_from_tiers, get_random_food_from_tiers
+from utils.helpers import get_random_pet_from_tiers, get_upgrade_pet_pair, get_random_food_from_tiers
 from utils.helpers import get_food_info, get_pet_info
 from utils.helpers import debug, red, yellow, green, blue, purple, cyan, shop_exp_display
-from utils.constants import GOLD_EMOJI, FREEZE_EMOJI, SPECIAL_EMOJI
+from utils.constants import GOLD_EMOJI, FREEZE_EMOJI, SPECIAL_EMOJI, LINK_EMOJI
 from objects.pets import GET_PET
 from objects.food import GET_FOOD, Food
 from objects.animal import Animal
@@ -36,8 +36,10 @@ class Shop:
     frozen_pets: List[int] = []
     frozen_foods: List[int] = []
 
+    upgrade_pet_pair = None
+
     team: Team = None
-    gold: int = 10
+    gold: int = 20          # TODO: reset to 10
 
     def __init__(self, turn: int, team: Team = None):
         self.TURN = turn
@@ -55,7 +57,10 @@ class Shop:
             if i in self.frozen_pets:
                 ret += f" [{FREEZE_EMOJI}]"
             
-            if i < len(self.pets) - 1:
+            if self.upgrade_pet_pair and pet == self.upgrade_pet_pair[0]:
+                ret += f" {LINK_EMOJI} "
+            
+            elif i < len(self.pets) - 1:
                 ret += " || "
 
         ret += f"\n\nFoods: (3 {GOLD_EMOJI} each, unless otherwise stated)\n\n"
@@ -237,7 +242,7 @@ class Shop:
         return True
 
     def user_turn(self):
-        self.gold = 10          # 10 gold per turn
+        self.gold = 200          # 10 gold per turn
         self.start_turn()
 
         while True:
@@ -374,6 +379,13 @@ class Shop:
 
         if "level up" in trigger:
             self.handle_level_up(trigger)
+        
+        if self.upgrade_pet_pair and pet in self.upgrade_pet_pair:
+            # if pet is in upgrade pair, remove other pet from shop and zero out pair
+            other_pet = self.upgrade_pet_pair[1] if self.upgrade_pet_pair[0] == pet else self.upgrade_pet_pair[0]
+            self.pets.remove(other_pet)
+            self.upgrade_pet_pair = None
+            
 
     def sell_pet(self):
         team_idx = input("Which pet do you want to sell? Enter the index: ")
@@ -591,10 +603,17 @@ class Shop:
 
         higher_tier = self.HIGHEST_TIER_PET + 1
         higher_tier = min(higher_tier, 6)           # cap at 6
-        new_pet_name = get_random_pet_from_tiers([higher_tier], 1)[0]
-        new_pet = GET_PET(new_pet_name)
 
-        self.pets.append(new_pet)
+        # new_pet_name = get_random_pet_from_tiers([higher_tier], 1)[0]
+        # new_pet = GET_PET(new_pet_name)
+
+        # self.pets.append(new_pet)
+
+        pet_pair = get_upgrade_pet_pair(higher_tier)
+        pet_pair = [GET_PET(pet) for pet in pet_pair]
+        self.upgrade_pet_pair = pet_pair
+        self.pets.extend(pet_pair)
+        print(pet_pair)
 
     def team_info(self):
         # get index of pet to get info on
