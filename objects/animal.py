@@ -180,15 +180,15 @@ class Animal:
         pass
 
     def on_faint(self):
-        ret = {}
+        ret = { "img": str(self) }
         if self.perk == 1:          # honey
-            ret = {
+            ret.update({
                 "honey": True
-            }
+            })
         elif self.perk == 8:        # mushroom
-            ret = {
+            ret.update({
                 "mushroom": True
-            }
+            })
         
         return ret
 
